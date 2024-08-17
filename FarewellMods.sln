@@ -2,6 +2,8 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FarewellCore", "FarewellCore\FarewellCore.csproj", "{7E102320-686E-47B3-BF2F-C1E0059A68F8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UniteTheNorth", "UniteTheNorth\UniteTheNorth.csproj", "{9F460322-4750-49FA-816F-317855E82322}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +14,9 @@ Global
 		{7E102320-686E-47B3-BF2F-C1E0059A68F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E102320-686E-47B3-BF2F-C1E0059A68F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E102320-686E-47B3-BF2F-C1E0059A68F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F460322-4750-49FA-816F-317855E82322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F460322-4750-49FA-816F-317855E82322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F460322-4750-49FA-816F-317855E82322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F460322-4750-49FA-816F-317855E82322}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
