@@ -703,6 +703,10 @@
       </PackageReference>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Networking\ClientBound\" />
+    </ItemGroup>
+
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <Exec Command="taskkill /IM &quot;Farewell North.exe&quot;&#xA;copy D:\PC\Dokumente-Secondary\Projekte\FarewellMods\UniteTheNorth\bin\Debug\net6.0\UniteTheNorth.dll &quot;D:\SteamLibrary\steamapps\common\Farewell North\Mods\UniteTheNorth.dll&quot; /Y&#xA;D:&#xA;cd &quot;D:\SteamLibrary\steamapps\common\Farewell North\&quot;&#xA;&quot;Farewell North.exe&quot;" />
     </Target>
