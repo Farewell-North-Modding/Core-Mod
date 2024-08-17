@@ -693,6 +693,16 @@
         </Reference>
     </ItemGroup>
 
+    <ItemGroup>
+      <PackageReference Include="LiteNetLib" Version="1.2.0" />
+      <PackageReference Include="MessagePack" Version="3.0.134-beta" />
+      <PackageReference Include="MessagePack.Annotations" Version="3.0.134-beta" />
+      <PackageReference Include="MessagePackAnalyzer" Version="3.0.134-beta">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
+    </ItemGroup>
+
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
         <Exec Command="taskkill /IM &quot;Farewell North.exe&quot;&#xA;copy D:\PC\Dokumente-Secondary\Projekte\FarewellMods\UniteTheNorth\bin\Debug\net6.0\UniteTheNorth.dll &quot;D:\SteamLibrary\steamapps\common\Farewell North\Mods\UniteTheNorth.dll&quot; /Y&#xA;D:&#xA;cd &quot;D:\SteamLibrary\steamapps\common\Farewell North\&quot;&#xA;&quot;Farewell North.exe&quot;" />
     </Target>
