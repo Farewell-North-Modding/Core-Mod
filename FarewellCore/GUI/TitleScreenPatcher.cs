@@ -1,4 +1,7 @@
-﻿using Il2CppRTLTMPro;
+﻿using Il2CppKBCore.Localization;
+using Il2CppKBCore.UI;
+using Il2CppRTLTMPro;
+using Il2CppSystem;
 using Il2CppTMPro;
 using MelonLoader;
 using UnityEngine;
@@ -7,43 +10,46 @@ using Object = UnityEngine.Object;
 
 namespace FarewellCore.GUI;
 
-public static class TitleScreenPatcher
+[RegisterTypeInIl2Cpp]
+public class TitleScreenPatcher : MonoBehaviour
 {
     public static void Patch(string sceneName)
     {
         if(sceneName != "Main Menu")
             return;
+        new GameObject("TitleScreenPatcher").AddComponent<TitleScreenPatcher>();
+    }
+
+    private void Start()
+    {
         PatchVersionNumber();
         PatchMenuButton();
+        FarewellCore.Logger?.Msg("Applied Title Screen Patches");
     }
 
     private static void PatchMenuButton()
     {
         var settingsButton = GameObject.Find("Settings");
-        var modsButton = Object.Instantiate(settingsButton, settingsButton.transform.parent);
+        var modsButton = Instantiate(settingsButton, settingsButton.transform.parent);
+        modsButton.transform.name = "Mods";
         modsButton.transform.SetSiblingIndex(3);
-        var clickedEvent = modsButton.GetComponent<Button>().onClick;
-        clickedEvent.RemoveAllListeners();
-        // Add the new clickevent
+        modsButton.GetComponent<Button>().interactable = false;
+        modsButton.GetComponentInChildren<LocalizedTextMeshPro>().enabled = false;
         var label = modsButton.GetComponentInChildren<RTLTextMeshPro>();
+        label.originalText = "Mods";
         label.text = "Mods";
-        label.color = new Color(180, 180, 180);
-    }
-
-    private static void ModsButtonClickEvent()
-    {
-        FarewellCore.Logger?.Msg("Mods!");
+        label.SetText("Mods");
     }
 
     private static void PatchVersionNumber()
     {
         var obj = GameObject.Find("Version Label");
         var txt = obj.GetComponent<TextMeshProUGUI>();
-        var newText = $"Game ${txt.text} by Kyle Banks\nCore Mod v{FarewellCore.Version} by Limo";
+        var newText = $"Game {txt.text} by Kyle Banks\nCore Mod v{FarewellCore.Version} by Limo";
         newText = MelonMod.RegisteredMelons
             .Where(mod => mod.Info.Name != "FarewellCore")
             .Aggregate(newText, (current, mod) => 
                 current + $"\n{mod.Info.Name} v{mod.Info.Version} by {mod.Info.Author}");
-        txt.text = newText;
+        txt.SetText(newText);
     }
 }

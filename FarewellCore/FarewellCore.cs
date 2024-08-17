@@ -13,7 +13,7 @@ public class FarewellCore : MelonMod
         Logger = LoggerInstance;
     }
 
-    public override void OnSceneWasLoaded(int buildIndex, string sceneName)
+    public override void OnSceneWasInitialized(int buildIndex, string sceneName)
     {
         TitleScreenPatcher.Patch(sceneName);
     }
