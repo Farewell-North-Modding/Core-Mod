@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using UniteTheNorth.Systems;
 
 namespace UniteTheNorth.Networking.ClientBound.Player;
 
@@ -18,6 +19,20 @@ public class PlayerAnimatePacket : IClientBoundPacket
 
     public void HandlePacket()
     {
-        throw new NotImplementedException();
+        switch (Value)
+        {
+            case bool boolVal:
+                PlayerManager.RunOnPlayer(ID, player => player.ReceiveAnimationBool(PropertyHash, boolVal));
+                break;
+            case float floatVal:
+                PlayerManager.RunOnPlayer(ID, player => player.ReceiveAnimationFloat(PropertyHash, floatVal));
+                break;
+            case int intVal:
+                PlayerManager.RunOnPlayer(ID, player => player.ReceiveAnimationInt(PropertyHash, intVal));
+                break;
+            default:
+                UniteTheNorth.Logger.Warning($"[Client] Received invalid animation value: {Value.GetType()}");
+                break;
+        }
     }
 }

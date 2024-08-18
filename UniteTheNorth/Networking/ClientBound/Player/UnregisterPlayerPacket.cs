@@ -1,6 +1,7 @@
 ﻿using MessagePack;
+using UniteTheNorth.Systems;
 
-namespace UniteTheNorth.Networking.ClientBound;
+namespace UniteTheNorth.Networking.ClientBound.Player;
 
 [MessagePackObject]
 public class UnregisterPlayerPacket : IClientBoundPacket
@@ -14,6 +15,6 @@ public class UnregisterPlayerPacket : IClientBoundPacket
 
     public void HandlePacket()
     {
-        throw new NotImplementedException();
+        PlayerManager.UnregisterPlayer(ID);
     }
 }

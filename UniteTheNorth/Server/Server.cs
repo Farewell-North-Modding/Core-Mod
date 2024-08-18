@@ -5,6 +5,7 @@ using LiteNetLib;
 using MessagePack;
 using UniteTheNorth.Networking;
 using UniteTheNorth.Networking.ClientBound;
+using UniteTheNorth.Networking.ClientBound.Player;
 using UniteTheNorth.Networking.ServerBound;
 using UnityEngine;
 

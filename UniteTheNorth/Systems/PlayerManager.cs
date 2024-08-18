@@ -68,7 +68,7 @@ public static class PlayerManager
             return;
         }
         var player = CreateNetPlayer();
-        player!.text!.text = username;
+        player!.ReceivePlayerInfo(username);
         PlayerCache[id] = player;
     }
 

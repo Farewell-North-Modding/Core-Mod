@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using UniteTheNorth.Systems;
 using UnityEngine;
 
 namespace UniteTheNorth.Networking.ClientBound.Player;
@@ -17,6 +18,6 @@ public class PlayerRotatePacket : IClientBoundPacket
 
     public void HandlePacket()
     {
-        throw new NotImplementedException();
+        PlayerManager.RunOnPlayer(ID, player => player.ReceiveRotation(Rotation));
     }
 }

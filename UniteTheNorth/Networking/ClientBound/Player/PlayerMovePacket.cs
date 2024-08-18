@@ -1,4 +1,5 @@
 ﻿using MessagePack;
+using UniteTheNorth.Systems;
 using UnityEngine;
 
 namespace UniteTheNorth.Networking.ClientBound.Player;
@@ -17,6 +18,6 @@ public class PlayerMovePacket : IClientBoundPacket
     
     public void HandlePacket()
     {
-        throw new NotImplementedException();
+        PlayerManager.RunOnPlayer(ID, player => player.ReceiveLocation(Position));
     }
 }

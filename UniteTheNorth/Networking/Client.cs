@@ -3,6 +3,7 @@ using System.Net.Sockets;
 using LiteNetLib;
 using MelonLoader;
 using UniteTheNorth.Networking.ServerBound;
+using UniteTheNorth.Systems;
 using UnityEngine;
 
 namespace UniteTheNorth.Networking;
@@ -44,6 +45,7 @@ public class Client : MonoBehaviour, INetEventListener
     private void OnDestroy()
     {
         NetClient?.Stop();
+        PlayerManager.Clean();
     }
 
     public void OnPeerConnected(NetPeer peer)
