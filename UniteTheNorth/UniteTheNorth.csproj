@@ -30,10 +30,6 @@
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
-  
-    <ItemGroup>
-        <Folder Include="Networking\ClientBound\" />
-    </ItemGroup>
 	<ItemGroup Label="Cross-Mod Dependencies">
 		<Reference Include="$(FarewellNorthLocation)\Mods\FarewellCore.dll" />
 	</ItemGroup>
