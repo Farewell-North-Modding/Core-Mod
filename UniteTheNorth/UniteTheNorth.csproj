@@ -722,6 +722,6 @@
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="taskkill /IM &quot;Farewell North.exe&quot;&#xA;copy D:\PC\Dokumente-Secondary\Projekte\FarewellMods\UniteTheNorth\bin\Debug\net6.0\UniteTheNorth.dll &quot;D:\SteamLibrary\steamapps\common\Farewell North\Mods\UniteTheNorth.dll&quot; /Y" />
+      <Exec Command="copy D:\PC\Dokumente-Secondary\Projekte\FarewellMods\UniteTheNorth\bin\Debug\net6.0\UniteTheNorth.dll &quot;D:\SteamLibrary\steamapps\common\Farewell North\Mods\UniteTheNorth.dll&quot; /Y" />
     </Target>
 </Project>
