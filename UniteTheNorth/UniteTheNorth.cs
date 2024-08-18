@@ -1,14 +1,13 @@
 ﻿using MelonLoader;
 using UniteTheNorth.Systems;
 using UniteTheNorth.Tools;
+using FarewellCore;
 
 namespace UniteTheNorth;
 
-public class UniteTheNorth : MelonMod
+public class UniteTheNorth : FarewellMod
 {
-
-    public static MelonLogger.Instance Logger { get { return Melon<UniteTheNorth>.Logger; } }
-    public const string Version = "0.1.0";
+    public static string Version => BuildInfo.Version;
     public static NetPlayer? _netPlayer;
 
     public override void OnInitializeMelon()

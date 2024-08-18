@@ -42,7 +42,7 @@ public class TitleScreenPatcher : MonoBehaviour
     {
         var obj = GameObject.Find("Version Label");
         var txt = obj.GetComponent<TextMeshProUGUI>();
-        var newText = $"Game {txt.text} by Kyle Banks\nCore Mod v{FarewellCore.Version} by Limo";
+        var newText = $"Game {txt.text} by Kyle Banks\nCore Mod v{Melon<FarewellCore>.Instance.Info.Version} by Limo";
         newText = MelonMod.RegisteredMelons
             .Where(mod => mod.Info.Name != "FarewellCore")
             .Aggregate(newText, (current, mod) => 

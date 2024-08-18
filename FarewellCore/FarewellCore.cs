@@ -3,10 +3,9 @@ using MelonLoader;
 
 namespace FarewellCore;
 
-public class FarewellCore : MelonMod
+public class FarewellCore : FarewellMod
 {
     public static MelonLogger.Instance Logger { get { return Melon<FarewellCore>.Logger; } }
-    public const string Version = "0.1.0";
 
     public override void OnInitializeMelon()
     {
