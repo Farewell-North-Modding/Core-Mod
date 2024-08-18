@@ -2,9 +2,7 @@
 using LiteNetLib.Utils;
 using MessagePack;
 using UniteTheNorth.Networking.BiDirectional;
-using UniteTheNorth.Networking.ClientBound;
 using UniteTheNorth.Networking.ClientBound.Player;
-using UniteTheNorth.Networking.ServerBound;
 using UniteTheNorth.Networking.ServerBound.Player;
 
 namespace UniteTheNorth.Networking;
@@ -34,7 +32,6 @@ public static class PacketManager
         // Bi Directional
         { typeof(KeepAlivePacket), 0 },
         // Server Bound
-        { typeof(UserConnectPacket), -1 },
         { typeof(PlayerMovePacketC2S), 10 },
         { typeof(PlayerRotatePacketC2S), 11 },
         { typeof(PlayerAnimatePacketC2S), 12 },

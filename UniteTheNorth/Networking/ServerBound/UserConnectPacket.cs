@@ -3,7 +3,7 @@
 namespace UniteTheNorth.Networking.ServerBound;
 
 [MessagePackObject]
-public class UserConnectPacket : IServerBoundPacket
+public class UserConnectPacket
 {
     [Key(0)] public readonly string Version;
     [Key(1)] public readonly string Username;
@@ -14,10 +14,5 @@ public class UserConnectPacket : IServerBoundPacket
         Version = UniteTheNorth.Version;
         Username = username;
         Password = password;
-    }
-
-    public void HandlePacket(Server.Client client)
-    {
-        throw new NotImplementedException();
     }
 }

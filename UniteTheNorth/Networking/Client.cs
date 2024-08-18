@@ -1,7 +1,9 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using LiteNetLib;
+using LiteNetLib.Utils;
 using MelonLoader;
+using MessagePack;
 using UniteTheNorth.Networking.ServerBound;
 using UniteTheNorth.Systems;
 using UnityEngine;
@@ -17,7 +19,6 @@ public class Client : MonoBehaviour, INetEventListener
     public static Client? Instance;
 
     public NetManager? NetClient;
-    public int ping;
 
     private void Start()
     {
@@ -28,8 +29,9 @@ public class Client : MonoBehaviour, INetEventListener
             UpdateTime = 15,
             ChannelsCount = 4
         };
-        NetClient.Connect(new IPEndPoint(IPAddress.Parse(Ip), Port),
-            PacketManager.SerializePacket(new UserConnectPacket(Username, "")));
+        var writer = new NetDataWriter();
+        writer.Put(MessagePackSerializer.Serialize(new UserConnectPacket(Username, "")));
+        NetClient.Connect(new IPEndPoint(IPAddress.Parse(Ip), Port), writer);
     }
 
     private void Update()
@@ -75,7 +77,7 @@ public class Client : MonoBehaviour, INetEventListener
 
     public void OnNetworkLatencyUpdate(NetPeer peer, int latency)
     {
-        ping = latency;
+        // Do absolutely nothing again :D
     }
 
     public void OnConnectionRequest(ConnectionRequest request)

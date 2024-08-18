@@ -1,4 +1,6 @@
-﻿using MessagePack;
+﻿using LiteNetLib;
+using MessagePack;
+using UniteTheNorth.Networking.ClientBound.Player;
 using UnityEngine;
 
 namespace UniteTheNorth.Networking.ServerBound.Player;
@@ -15,6 +17,9 @@ public class PlayerRotatePacketC2S : IServerBoundPacket
 
     public void HandlePacket(Server.Client client)
     {
-        throw new NotImplementedException();
+        PacketManager.SendToAll(new PlayerRotatePacket(
+            client.ID,
+            Rotation
+        ), DeliveryMethod.ReliableSequenced, Channels.Medium, client);
     }
 }

@@ -91,7 +91,6 @@ public class Server : MonoBehaviour, INetEventListener
     {
         // Validate Connection
         UniteTheNorth.Logger.Msg($"[Server] New Connection from {request.RemoteEndPoint}");
-        request.Data.GetInt();
         var packet = MessagePackSerializer.Deserialize<UserConnectPacket>(request.Data.GetRemainingBytes());
         if (UniteTheNorth.Version != packet.Version)
         {
@@ -109,7 +108,7 @@ public class Server : MonoBehaviour, INetEventListener
             id++;
         var newClient = Clients[id] = new Client(request.Accept(), packet.Username, id);
         // Send current Data
-        foreach (var client in Clients.Values)
+        foreach (var client in Clients.Values.Where(client => client != newClient))
         {
             PacketManager.Send(client, new RegisterPlayerPacket(
                 newClient.ID,

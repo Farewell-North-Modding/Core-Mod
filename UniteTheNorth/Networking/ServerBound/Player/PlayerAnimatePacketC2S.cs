@@ -1,4 +1,6 @@
-﻿using MessagePack;
+﻿using LiteNetLib;
+using MessagePack;
+using UniteTheNorth.Networking.ClientBound.Player;
 
 namespace UniteTheNorth.Networking.ServerBound.Player;
 
@@ -16,6 +18,10 @@ public class PlayerAnimatePacketC2S : IServerBoundPacket
 
     public void HandlePacket(Server.Client client)
     {
-        throw new NotImplementedException();
+        PacketManager.SendToAll(new PlayerAnimatePacket(
+            client.ID,
+            PropertyHash,
+            Value
+        ), DeliveryMethod.Unreliable, Channels.Medium, client);
     }
 }
