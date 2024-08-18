@@ -13,7 +13,7 @@ public class PlayerRotatePacketC2S : IServerBoundPacket
         Rotation = rotation;
     }
 
-    public void HandlePacket(Client client)
+    public void HandlePacket(Server.Client client)
     {
         throw new NotImplementedException();
     }

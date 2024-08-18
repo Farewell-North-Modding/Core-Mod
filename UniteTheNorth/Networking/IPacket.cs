@@ -7,7 +7,7 @@ public interface IClientBoundPacket
 
 public interface IServerBoundPacket
 {
-    public void HandlePacket(Client client);
+    public void HandlePacket(Server.Client client);
 }
 
 public interface IBiDirectionalPacket : IClientBoundPacket, IServerBoundPacket {  }

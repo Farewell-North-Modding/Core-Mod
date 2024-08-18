@@ -1,4 +1,5 @@
-﻿using MessagePack;
+﻿using LiteNetLib;
+using MessagePack;
 
 namespace UniteTheNorth.Networking.BiDirectional;
 
@@ -7,11 +8,11 @@ public class KeepAlivePacket : IBiDirectionalPacket
 {
     public void HandlePacket()
     {
-        throw new NotImplementedException();
+        PacketManager.Send(this, DeliveryMethod.Unreliable, Channels.Unimportant);
     }
 
-    public void HandlePacket(Client client)
+    public void HandlePacket(Server.Client client)
     {
-        throw new NotImplementedException();
+        // Ignore for now
     }
 }

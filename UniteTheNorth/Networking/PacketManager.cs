@@ -54,7 +54,22 @@ public static class PacketManager
     {
         var data = SerializePacket(packet);
         if (Client.Instance?.IsConnected() == true)
-            Client.Instance!.NetClient?.SendToAll(data, (byte) channel, method);
+            Client.Instance.NetClient?.SendToAll(data, (byte) channel, method);
+    }
+
+    public static void Send(Server.Client client, IClientBoundPacket packet, DeliveryMethod method = DeliveryMethod.ReliableUnordered, Channels channel = Channels.Medium)
+    {
+        var data = SerializePacket(packet);
+        client.Peer.Send(data, (byte) channel, method);
+    }
+
+    public static void SendToAll(IClientBoundPacket packet, DeliveryMethod method = DeliveryMethod.ReliableUnordered, Channels channel = Channels.Medium, Server.Client? exclude = null)
+    {
+        var data = SerializePacket(packet);
+        if(exclude != null)
+            Server.Server.Instance?.NetServer?.SendToAll(data, (byte) channel, method, exclude.Peer);
+        else
+            Server.Server.Instance?.NetServer?.SendToAll(data, (byte) channel, method);
     }
 
     public static void HandlePacket(NetPacketReader reader)
@@ -78,7 +93,7 @@ public static class PacketManager
         }
     }
 
-    public static void HandlePacket(Client client, NetPacketReader reader)
+    public static void HandlePacket(Server.Client client, NetPacketReader reader)
     {
         try
         {

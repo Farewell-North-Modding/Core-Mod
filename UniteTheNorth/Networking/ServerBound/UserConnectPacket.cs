@@ -16,7 +16,7 @@ public class UserConnectPacket : IServerBoundPacket
         Password = password;
     }
 
-    public void HandlePacket(Client client)
+    public void HandlePacket(Server.Client client)
     {
         throw new NotImplementedException();
     }

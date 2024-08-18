@@ -13,7 +13,7 @@ public class PlayerMovePacketC2S : IServerBoundPacket
         Position = position;
     }
     
-    public void HandlePacket(Client client)
+    public void HandlePacket(Server.Client client)
     {
         throw new NotImplementedException();
     }
