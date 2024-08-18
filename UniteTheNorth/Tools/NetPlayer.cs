@@ -7,16 +7,37 @@ namespace UniteTheNorth.Tools;
 [RegisterTypeInIl2Cpp]
 public class NetPlayer : MonoBehaviour
 {
+    public float lerpSpeed = 5F;
     private Animator? _animator;
+    private Vector3 _locationGoal;
+    private Quaternion _rotationGoal;
 
     private void Start()
     {
         _animator = GetComponent<Animator>();
+        Destroy(GetComponent<Rigidbody>());
     }
 
-    public void ReceiveAnimation(int id)
+    private void Update()
     {
-        _animator?.Play(id);
+        if (Vector3.Distance(_locationGoal, transform.position) > .1F)
+        {
+            transform.position = Vector3.Lerp(transform.position, _locationGoal, lerpSpeed * Time.deltaTime);
+        }
+        if (Quaternion.Angle(_rotationGoal, transform.rotation) > 3F)
+        {
+            transform.rotation = Quaternion.Lerp(transform.rotation, _rotationGoal, lerpSpeed * Time.deltaTime);
+        }
+    }
+
+    public void ReceiveLocation(Vector3 location)
+    {
+        _locationGoal = location;
+    }
+
+    public void ReceiveRotation(Quaternion rotation)
+    {
+        _rotationGoal = rotation;
     }
 
     public void ReceiveAnimationBool(int id, bool val)

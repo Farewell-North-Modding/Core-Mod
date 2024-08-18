@@ -3,28 +3,51 @@ using UnityEngine;
 
 namespace UniteTheNorth.Systems;
 
-public class LocalStateSender
+public static class LocalStateSender
 {
-    private static bool _initialized;
+    private static int _messageCooldown;
+    private static bool _animatorInitialized;
+
+    private static Vector3 _lastPosition = Vector3.zero;
+    private static Quaternion _lastRotation = Quaternion.identity;
     private static bool[]? _lastBools;
     private static float[]? _lastFloats;
     private static int[]? _lastInts;
 
     public static void SendUpdates()
     {
+        // Apply Cooldown
+        _messageCooldown--;
+        if(_messageCooldown > 0)
+            return;
+        _messageCooldown = 4;
+        
         // Find Player
         var player = GameplayFinder.FindPlayer();
         if(player == null)
             return;
+        
+        // Send Position and Rotation
+        var pTransform = player.GetGameObject().transform;
+        if (Vector3.Distance(_lastPosition, pTransform.position) > .1F)
+        {
+            _lastPosition = pTransform.position;
+            SendLocation(_lastPosition);
+        }
+        if (Quaternion.Angle(_lastRotation, pTransform.rotation) > 3F)
+        {
+            _lastRotation = pTransform.rotation;
+            SendRotation(_lastRotation);
+        }
         
         // Send Animation State
         var animator = player.Animator;
         var parameters = animator.parameters;
         if(parameters == null || animator == null)
             return;
-        if (!_initialized)
+        if (!_animatorInitialized)
         {
-            _initialized = true;
+            _animatorInitialized = true;
             var bools = 0;
             var floats = 0;
             var ints = 0;
@@ -74,6 +97,16 @@ public class LocalStateSender
                     break;
             }
         }
+    }
+
+    private static void SendLocation(Vector3 location)
+    {
+        UniteTheNorth._netPlayer?.ReceiveLocation(location + new Vector3(2, 0, 0));
+    }
+
+    private static void SendRotation(Quaternion rotation)
+    {
+        UniteTheNorth._netPlayer?.ReceiveRotation(rotation);
     }
 
     private static void SendAnimatorBool(int id, bool val)
