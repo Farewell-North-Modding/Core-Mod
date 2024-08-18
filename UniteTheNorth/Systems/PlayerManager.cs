@@ -8,6 +8,6 @@ public static class PlayerManager
     public static NetPlayer? CreateNetPlayer()
     {
         var newObject = GameplayFinder.FindPlayer()?.GetGameObject();
-        return newObject == null ? null : newObject.GetComponent<NetPlayer>();
+        return newObject?.AddComponent<NetPlayer>();
     }
 }
