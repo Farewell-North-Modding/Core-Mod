@@ -694,6 +694,6 @@
     </ItemGroup>
 
     <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-      <Exec Command="taskkill /IM &quot;Farewell North.exe&quot;&#xA;copy D:\PC\Dokumente-Secondary\Projekte\FarewellMods\FarewellCore\bin\Debug\net6.0\FarewellCore.dll &quot;D:\SteamLibrary\steamapps\common\Farewell North\Mods\FarewellCore.dll&quot; /Y&#xA;D:&#xA;cd &quot;D:\SteamLibrary\steamapps\common\Farewell North\&quot;&#xA;&quot;Farewell North.exe&quot;" />
+      <Exec Command="copy D:\PC\Dokumente-Secondary\Projekte\FarewellMods\FarewellCore\bin\Debug\net6.0\FarewellCore.dll &quot;D:\SteamLibrary\steamapps\common\Farewell North\Mods\FarewellCore.dll&quot; /Y" />
     </Target>
 </Project>
