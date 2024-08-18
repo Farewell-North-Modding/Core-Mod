@@ -21,14 +21,21 @@ public class PlayerWrapper
         _go = gameObject;
     }
 
+    public GameObject GetGameObject()
+    {
+        return _go;
+    }
+
     public PlayerWrapper CreatePlayerDummy()
     {
         var parent = GameObject.Find("DummyContainer");
         if (parent == null)
             parent = new GameObject("DummyContainer");
-        var newObject = Object.Instantiate(_go, parent.transform);
-        newObject.GetComponent<MalbersLocomotion>().enabled = false;
-        var newWrapper = new PlayerWrapper(newObject);
-        return newWrapper;
+        var newCorePlayer = Object.Instantiate(_go, _go.transform.parent);
+        _go.GetComponent<MalbersLocomotion>().enabled = false;
+        _go.transform.SetParent(parent.transform);
+        _go.transform.name = $"Player-Dummy-{Guid.NewGuid()}";
+        newCorePlayer.transform.name = "Player";
+        return this;
     }
 }
