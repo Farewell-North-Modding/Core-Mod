@@ -11,9 +11,9 @@ namespace UniteTheNorth.Networking;
 
 public static class PacketManager
 {
-    /**
-     * Register all your client bound packets in this map for them to be recognized in the protocol. Please use IDs that only your mod could ever have or use our ID generator.
-     */
+    /// <summary>
+    /// Register all your client bound packets in this map for them to be recognized in the protocol. Please use IDs that only your mod could ever have or use our ID generator.
+    /// </summary>
     public static readonly Dictionary<Type, int> ClientBoundMap = new()
     {
         // Bi Directional
@@ -26,9 +26,9 @@ public static class PacketManager
         { typeof(PlayerAnimatePacket), 12 },
     };
     
-    /**
-     * Register all your server bound packets in this map for them to be recognized in the protocol. Please use IDs that only your mod could ever have or use our ID generator.
-     */
+    /// <summary>
+    /// Register all your server bound packets in this map for them to be recognized in the protocol. Please use IDs that only your mod could ever have or use our ID generator.
+    /// </summary>
     public static readonly Dictionary<Type, int> ServerBoundMap = new()
     {
         // Bi Directional
