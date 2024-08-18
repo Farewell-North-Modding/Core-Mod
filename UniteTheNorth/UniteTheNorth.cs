@@ -1,8 +1,6 @@
-﻿using FarewellCore.Tools;
-using MelonLoader;
+﻿using MelonLoader;
 using UniteTheNorth.Systems;
 using UniteTheNorth.Tools;
-using UnityEngine;
 
 namespace UniteTheNorth;
 

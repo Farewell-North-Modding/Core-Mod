@@ -1,5 +1,4 @@
-﻿using FarewellCore.Wrapper;
-using MelonLoader;
+﻿using MelonLoader;
 using UnityEngine;
 
 namespace UniteTheNorth.Tools;
@@ -7,19 +6,22 @@ namespace UniteTheNorth.Tools;
 [RegisterTypeInIl2Cpp]
 public class NetPlayer : MonoBehaviour
 {
-    public float lerpSpeed = 5F;
+    public float lerpSpeed = 10F;
     private Animator? _animator;
     private Vector3 _locationGoal;
     private Quaternion _rotationGoal;
+    private AnimatorFloatLerp? _floatLerp;
 
     private void Start()
     {
         _animator = GetComponent<Animator>();
         Destroy(GetComponent<Rigidbody>());
+        _floatLerp = new AnimatorFloatLerp(_animator);
     }
 
     private void Update()
     {
+        _floatLerp?.Update();
         if (Vector3.Distance(_locationGoal, transform.position) > .1F)
         {
             transform.position = Vector3.Lerp(transform.position, _locationGoal, lerpSpeed * Time.deltaTime);
@@ -47,7 +49,7 @@ public class NetPlayer : MonoBehaviour
 
     public void ReceiveAnimationFloat(int id, float val)
     {
-        _animator?.SetFloat(id, val);
+        _floatLerp?.SetFloat(id, val);
     }
 
     public void ReceiveAnimationInt(int id, int val)
