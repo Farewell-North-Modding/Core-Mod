@@ -24,7 +24,7 @@ public class TitleScreenPatcher : MonoBehaviour
     {
         PatchVersionNumber();
         PatchMenuButton();
-        FarewellCore.Logger?.Msg("Applied Title Screen Patches");
+        FarewellCore.Logger.Msg("Applied Title Screen Patches");
     }
 
     private static void PatchMenuButton()

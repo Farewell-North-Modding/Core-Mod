@@ -1,9 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<!-- Install location - can be defined as a user variable `FarewellNorthLocation` to avoid editing this file when collaborating. -->
-		<FarewellNorthLocation Condition="!Exists('$(FarewellNorthLocation)/GameAssembly.dll')">
-			..\..\..\..\..\SteamLibrary\steamapps\common\Farewell North
-		</FarewellNorthLocation>
+		<FarewellNorthLocation Condition="!Exists('$(FarewellNorthLocation)/GameAssembly.dll')">..\..\..\..\..\SteamLibrary\steamapps\common\Farewell North</FarewellNorthLocation>
 	</PropertyGroup>
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
