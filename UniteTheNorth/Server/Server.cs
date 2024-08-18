@@ -4,6 +4,7 @@ using System.Text;
 using LiteNetLib;
 using MessagePack;
 using UniteTheNorth.Networking;
+using UniteTheNorth.Networking.BiDirectional;
 using UniteTheNorth.Networking.ClientBound;
 using UniteTheNorth.Networking.ClientBound.Player;
 using UniteTheNorth.Networking.ServerBound;
@@ -18,7 +19,8 @@ public class Server : MonoBehaviour, INetEventListener
     public static Server? Instance;
     
     public NetManager? NetServer;
-    public readonly Dictionary<int, Client> Clients = new();
+    private readonly Dictionary<int, Client> _clients = new();
+    private int _keepAliveDelay = 300;
     
     private void Start()
     {
@@ -35,6 +37,15 @@ public class Server : MonoBehaviour, INetEventListener
         NetServer?.PollEvents();
     }
 
+    private void FixedUpdate()
+    {
+        _keepAliveDelay--;
+        if(_keepAliveDelay > 0)
+            return;
+        _keepAliveDelay = 300;
+        PacketManager.SendToAll(new KeepAlivePacket(), DeliveryMethod.Unreliable, Channels.Unimportant);
+    }
+
     private void OnDestroy()
     {
         NetServer?.Stop();
@@ -42,7 +53,7 @@ public class Server : MonoBehaviour, INetEventListener
 
     private bool TryGetClient(NetPeer peer, out Client? client)
     {
-        client = Clients.Values.FirstOrDefault(client => Equals(client.Peer, peer));
+        client = _clients.Values.FirstOrDefault(client => Equals(client.Peer, peer));
         return client != null;
     }
 
@@ -54,7 +65,7 @@ public class Server : MonoBehaviour, INetEventListener
     {
         if (TryGetClient(peer, out var client))
         {
-            Clients.Remove(client!.ID);
+            _clients.Remove(client!.ID);
             UniteTheNorth.Logger.Msg($"[Server] User {client!.Username} disconnected: {disconnectInfo.Reason}");
             PacketManager.SendToAll(new UnregisterPlayerPacket(
                 client.ID    
@@ -104,11 +115,11 @@ public class Server : MonoBehaviour, INetEventListener
         }
         // Add Valid Clients
         var id = 0;
-        while (Clients.ContainsKey(id))
+        while (_clients.ContainsKey(id))
             id++;
-        var newClient = Clients[id] = new Client(request.Accept(), packet.Username, id);
+        var newClient = _clients[id] = new Client(request.Accept(), packet.Username, id);
         // Send current Data
-        foreach (var client in Clients.Values.Where(client => client != newClient))
+        foreach (var client in _clients.Values.Where(client => client != newClient))
         {
             PacketManager.Send(client, new RegisterPlayerPacket(
                 newClient.ID,
