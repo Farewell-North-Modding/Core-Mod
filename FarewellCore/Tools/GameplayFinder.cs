@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace FarewellCore.Tools;
 
-public class GameplayFinder
+public static class GameplayFinder
 {
     public static PlayerWrapper? FindPlayer()
     {
