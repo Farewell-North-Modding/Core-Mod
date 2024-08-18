@@ -8,12 +8,14 @@ namespace UniteTheNorth.Networking.ServerBound.Player;
 public class PlayerAnimatePacketC2S : IServerBoundPacket
 {
     [Key(0)] public readonly int PropertyHash;
-    [Key(1)] public readonly object Value;
+    [Key(1)] public readonly int Type;
+    [Key(2)] public readonly object Value;
 
-    public PlayerAnimatePacketC2S(int propertyHash, object value)
+    public PlayerAnimatePacketC2S(int propertyHash, object value, int type)
     {
         PropertyHash = propertyHash;
         Value = value;
+        Type = type;
     }
 
     public void HandlePacket(Server.Client client)
@@ -21,7 +23,8 @@ public class PlayerAnimatePacketC2S : IServerBoundPacket
         PacketManager.SendToAll(new PlayerAnimatePacket(
             client.ID,
             PropertyHash,
-            Value
+            Value,
+            Type
         ), DeliveryMethod.Unreliable, Channels.Medium, client);
     }
 }

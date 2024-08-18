@@ -1,4 +1,7 @@
 ﻿using FarewellCore.Tools;
+using LiteNetLib;
+using UniteTheNorth.Networking;
+using UniteTheNorth.Networking.ServerBound.Player;
 using UnityEngine;
 
 namespace UniteTheNorth.Systems;
@@ -101,26 +104,39 @@ public static class LocalStateSender
 
     private static void SendLocation(Vector3 location)
     {
-        // UniteTheNorth._netPlayer?.ReceiveLocation(location + new Vector3(2, 0, 0));
+        PacketManager.Send(new PlayerMovePacketC2S(
+            location + new Vector3(2, 0, 0)
+        ), DeliveryMethod.ReliableSequenced, Channels.Important);
     }
 
     private static void SendRotation(Quaternion rotation)
     {
-        // UniteTheNorth._netPlayer?.ReceiveRotation(rotation);
+        PacketManager.Send(new PlayerRotatePacketC2S(
+            rotation
+        ), DeliveryMethod.ReliableSequenced);
     }
 
     private static void SendAnimatorBool(int id, bool val)
     {
-        // UniteTheNorth._netPlayer?.ReceiveAnimationBool(id, val);
+        PacketManager.Send(new PlayerAnimatePacketC2S(
+            id,
+            val, 0
+        ), DeliveryMethod.Unreliable);
     }
 
     private static void SendAnimatorFloat(int id, float val)
     {
-        // UniteTheNorth._netPlayer?.ReceiveAnimationFloat(id, val);
+        PacketManager.Send(new PlayerAnimatePacketC2S(
+            id,
+            val, 1
+        ), DeliveryMethod.Unreliable);
     }
 
     private static void SendAnimatorInt(int id, int val)
     {
-        // UniteTheNorth._netPlayer?.ReceiveAnimationInt(id, val);
+        PacketManager.Send(new PlayerAnimatePacketC2S(
+            id,
+            val, 2
+        ), DeliveryMethod.Unreliable);
     }
 }
