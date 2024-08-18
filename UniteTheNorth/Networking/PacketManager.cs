@@ -39,6 +39,12 @@ public static class PacketManager
         { typeof(PlayerAnimatePacketC2S), 22 },
     };
     
+    /// <summary>
+    /// Serializes a packet and joins it with its corresponding protocol ID into a LiteNetLib NetDataWriter
+    /// </summary>
+    /// <param name="packet">The packet to serialize and numerate</param>
+    /// <returns>NetDataWriter containing both packet ID and serialized packet</returns>
+    /// <exception cref="NotImplementedException">Thrown if the packets type isn't registered in the protocol</exception>
     public static NetDataWriter SerializePacket(object packet)
     {
         if (!ClientBoundMap.TryGetValue(packet.GetType(), out var id) && !ServerBoundMap.TryGetValue(packet.GetType(), out id))
@@ -49,6 +55,12 @@ public static class PacketManager
         return writer;
     }
 
+    /// <summary>
+    /// Sends a packet to the server
+    /// </summary>
+    /// <param name="packet">The packet to send</param>
+    /// <param name="method">The LiteNetLib delivery method</param>
+    /// <param name="channel">The channel to send the packet on</param>
     public static void Send(IServerBoundPacket packet, DeliveryMethod method = DeliveryMethod.ReliableUnordered, Channels channel = Channels.Medium)
     {
         var data = SerializePacket(packet);
@@ -56,12 +68,26 @@ public static class PacketManager
             Client.Instance.NetClient?.SendToAll(data, (byte) channel, method);
     }
 
+    /// <summary>
+    /// Sends a packet to a client
+    /// </summary>
+    /// <param name="client">The client to send the packet to</param>
+    /// <param name="packet">The packet to send</param>
+    /// <param name="method">The LiteNetLib delivery method</param>
+    /// <param name="channel">The channel to send the packet on</param>
     public static void Send(Server.Client client, IClientBoundPacket packet, DeliveryMethod method = DeliveryMethod.ReliableUnordered, Channels channel = Channels.Medium)
     {
         var data = SerializePacket(packet);
         client.Peer.Send(data, (byte) channel, method);
     }
 
+    /// <summary>
+    /// Broadcasts a packet to all clients
+    /// </summary>
+    /// <param name="packet">The packet to send</param>
+    /// <param name="method">The LiteNetLib delivery method</param>
+    /// <param name="channel">The channel to send the packet on</param>
+    /// <param name="exclude">The client that should be excluded from the broadcast</param>
     public static void SendToAll(IClientBoundPacket packet, DeliveryMethod method = DeliveryMethod.ReliableUnordered, Channels channel = Channels.Medium, Server.Client? exclude = null)
     {
         var data = SerializePacket(packet);
@@ -71,6 +97,10 @@ public static class PacketManager
             Server.Server.Instance?.NetServer?.SendToAll(data, (byte) channel, method);
     }
 
+    /// <summary>
+    /// Handles a client-bound packet
+    /// </summary>
+    /// <param name="reader">The LiteNetLib reader</param>
     public static void HandlePacket(NetPacketReader reader)
     {
         try
@@ -92,6 +122,11 @@ public static class PacketManager
         }
     }
 
+    /// <summary>
+    /// Handles a server-bound packet
+    /// </summary>
+    /// <param name="client">The client the packet was sent from</param>
+    /// <param name="reader">The LiteNetLib reader</param>
     public static void HandlePacket(Server.Client client, NetPacketReader reader)
     {
         try
