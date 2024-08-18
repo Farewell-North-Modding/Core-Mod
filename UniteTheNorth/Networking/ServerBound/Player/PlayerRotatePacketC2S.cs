@@ -4,11 +4,11 @@ using UnityEngine;
 namespace UniteTheNorth.Networking.ServerBound.Player;
 
 [MessagePackObject]
-public class PlayerRotatePacket : IServerBoundPacket
+public class PlayerRotatePacketC2S : IServerBoundPacket
 {
     [Key(0)] public readonly Quaternion Rotation;
     
-    public PlayerRotatePacket(Quaternion rotation)
+    public PlayerRotatePacketC2S(Quaternion rotation)
     {
         Rotation = rotation;
     }

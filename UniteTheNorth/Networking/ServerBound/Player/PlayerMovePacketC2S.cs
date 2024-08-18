@@ -4,11 +4,11 @@ using UnityEngine;
 namespace UniteTheNorth.Networking.ServerBound.Player;
 
 [MessagePackObject]
-public class PlayerMovePacket : IServerBoundPacket
+public class PlayerMovePacketC2S : IServerBoundPacket
 {
     [Key(0)] public readonly Vector3 Position;
     
-    public PlayerMovePacket(Vector3 position)
+    public PlayerMovePacketC2S(Vector3 position)
     {
         Position = position;
     }

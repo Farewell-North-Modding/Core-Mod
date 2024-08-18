@@ -101,26 +101,26 @@ public static class LocalStateSender
 
     private static void SendLocation(Vector3 location)
     {
-        UniteTheNorth._netPlayer?.ReceiveLocation(location + new Vector3(2, 0, 0));
+        // UniteTheNorth._netPlayer?.ReceiveLocation(location + new Vector3(2, 0, 0));
     }
 
     private static void SendRotation(Quaternion rotation)
     {
-        UniteTheNorth._netPlayer?.ReceiveRotation(rotation);
+        // UniteTheNorth._netPlayer?.ReceiveRotation(rotation);
     }
 
     private static void SendAnimatorBool(int id, bool val)
     {
-        UniteTheNorth._netPlayer?.ReceiveAnimationBool(id, val);
+        // UniteTheNorth._netPlayer?.ReceiveAnimationBool(id, val);
     }
 
     private static void SendAnimatorFloat(int id, float val)
     {
-        UniteTheNorth._netPlayer?.ReceiveAnimationFloat(id, val);
+        // UniteTheNorth._netPlayer?.ReceiveAnimationFloat(id, val);
     }
 
     private static void SendAnimatorInt(int id, int val)
     {
-        UniteTheNorth._netPlayer?.ReceiveAnimationInt(id, val);
+        // UniteTheNorth._netPlayer?.ReceiveAnimationInt(id, val);
     }
 }
