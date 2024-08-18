@@ -56,32 +56,46 @@ public static class PacketManager
         if (Client.Instance?.IsConnected() == true)
             Client.Instance!.NetClient?.SendToAll(data, (byte) channel, method);
     }
-    
+
     public static void HandlePacket(NetPacketReader reader)
     {
-        var packetId = reader.GetInt();
-        var packetData = reader.GetRemainingBytes();
-        foreach (var type in from pair in ClientBoundMap where pair.Value == packetId select pair.Key)
+        try
         {
-            if (MessagePackSerializer.Deserialize(type, packetData) is IClientBoundPacket packet)
+            var packetId = reader.GetInt();
+            var packetData = reader.GetRemainingBytes();
+            foreach (var type in from pair in ClientBoundMap where pair.Value == packetId select pair.Key)
             {
+                if (MessagePackSerializer.Deserialize(type, packetData) is not IClientBoundPacket packet) continue;
                 packet.HandlePacket();
+                return;
             }
+            UniteTheNorth.Logger.Warning("[Client] Couldn't handle packet with ID: " + packetId);
         }
-        // Log
+        catch (Exception e)
+        {
+            UniteTheNorth.Logger.Warning(e);
+            throw;
+        }
     }
 
     public static void HandlePacket(Client client, NetPacketReader reader)
     {
-        var packetId = reader.GetInt();
-        var packetData = reader.GetRemainingBytes();
-        foreach (var type in from pair in ServerBoundMap where pair.Value == packetId select pair.Key)
+        try
         {
-            if (MessagePackSerializer.Deserialize(type, packetData) is IServerBoundPacket packet)
+            var packetId = reader.GetInt();
+            var packetData = reader.GetRemainingBytes();
+            foreach (var type in from pair in ServerBoundMap where pair.Value == packetId select pair.Key)
             {
+                if (MessagePackSerializer.Deserialize(type, packetData) is not IServerBoundPacket packet) continue;
                 packet.HandlePacket(client);
+                return;
             }
+            UniteTheNorth.Logger.Warning("[Server] Couldn't handle packet with ID: " + packetId);
         }
-        // Log
+        catch (Exception e)
+        {
+            UniteTheNorth.Logger.Warning(e);
+            throw;
+        }
     }
 }

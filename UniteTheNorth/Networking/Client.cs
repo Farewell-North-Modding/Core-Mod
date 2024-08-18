@@ -48,17 +48,17 @@ public class Client : MonoBehaviour, INetEventListener
 
     public void OnPeerConnected(NetPeer peer)
     {
-        // Log
+        UniteTheNorth.Logger.Msg($"[Client] Connected to {peer.Address}");
     }
 
     public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)
     {
-        // Log
+        UniteTheNorth.Logger.Msg($"[Client] Disconnected with reason: {disconnectInfo.Reason}");
     }
 
     public void OnNetworkError(IPEndPoint endPoint, SocketError socketError)
     {
-        // Log
+        UniteTheNorth.Logger.Warning($"[Client] Network Error: {socketError}");
     }
 
     public void OnNetworkReceive(NetPeer peer, NetPacketReader reader, byte channelNumber, DeliveryMethod deliveryMethod)
