@@ -8,6 +8,7 @@ namespace UniteTheNorth;
 public class UniteTheNorth : FarewellMod
 {
     public static string Version => BuildInfo.Version;
+    public static MelonLogger.Instance Logger => Melon<UniteTheNorth>.Logger;
     public static NetPlayer? _netPlayer;
 
     public override void OnInitializeMelon()

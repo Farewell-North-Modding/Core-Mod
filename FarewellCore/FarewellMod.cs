@@ -11,12 +11,10 @@ namespace FarewellCore
     /// Base class for Farewell North mods.
     /// </summary>
     public abstract class FarewellMod : MelonMod, IFarewellMod
-    { 
-        
+    {
     }
 
     public interface IFarewellMod
     {
-        public static MelonLogger.Instance Logger { get { return Melon<FarewellCore>.Logger; } }
     }
 }
