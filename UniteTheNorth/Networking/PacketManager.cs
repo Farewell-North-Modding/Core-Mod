@@ -14,14 +14,15 @@ public static class PacketManager
     /// </summary>
     public static readonly Dictionary<Type, int> ClientBoundMap = new()
     {
-        // Bi Directional
+        // Bi Directional (0-9)
         { typeof(KeepAlivePacket), 0 },
-        // Client Bound 
-        { typeof(RegisterPlayerPacket), 1 },
-        { typeof(UnregisterPlayerPacket), 2 },
-        { typeof(PlayerMovePacket), 10 },
-        { typeof(PlayerRotatePacket), 11 },
-        { typeof(PlayerAnimatePacket), 12 },
+        { typeof(ChatMessagePacket), 1 },
+        // Client Bound (System 10-19; Play 20+)
+        { typeof(RegisterPlayerPacket), 10 },
+        { typeof(UnregisterPlayerPacket), 11 },
+        { typeof(PlayerMovePacket), 20 },
+        { typeof(PlayerRotatePacket), 21 },
+        { typeof(PlayerAnimatePacket), 22 },
     };
     
     /// <summary>
@@ -29,12 +30,13 @@ public static class PacketManager
     /// </summary>
     public static readonly Dictionary<Type, int> ServerBoundMap = new()
     {
-        // Bi Directional
+        // Bi Directional (0-9)
         { typeof(KeepAlivePacket), 0 },
-        // Server Bound
-        { typeof(PlayerMovePacketC2S), 10 },
-        { typeof(PlayerRotatePacketC2S), 11 },
-        { typeof(PlayerAnimatePacketC2S), 12 },
+        { typeof(ChatMessagePacket), 1 },
+        // Server Bound (System 10-19; Play 20+)
+        { typeof(PlayerMovePacketC2S), 20 },
+        { typeof(PlayerRotatePacketC2S), 21 },
+        { typeof(PlayerAnimatePacketC2S), 22 },
     };
     
     public static NetDataWriter SerializePacket(object packet)
