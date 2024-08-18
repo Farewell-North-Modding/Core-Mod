@@ -1,6 +1,7 @@
 ﻿using MelonLoader;
 using UniteTheNorth.Systems;
 using FarewellCore;
+using BuildInfo = UniteTheNorth.Properties.BuildInfo;
 
 namespace UniteTheNorth;
 
