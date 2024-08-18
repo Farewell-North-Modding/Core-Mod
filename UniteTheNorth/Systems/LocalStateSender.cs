@@ -29,7 +29,7 @@ public static class LocalStateSender
         
         // Send Position and Rotation
         var pTransform = player.GetGameObject().transform;
-        if (Vector3.Distance(_lastPosition, pTransform.position) > .1F)
+        if (Vector3.Distance(_lastPosition, pTransform.position) > .01F)
         {
             _lastPosition = pTransform.position;
             SendLocation(_lastPosition);

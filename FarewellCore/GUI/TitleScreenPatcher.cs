@@ -1,12 +1,9 @@
 ﻿using Il2CppKBCore.Localization;
-using Il2CppKBCore.UI;
 using Il2CppRTLTMPro;
-using Il2CppSystem;
 using Il2CppTMPro;
 using MelonLoader;
 using UnityEngine;
 using UnityEngine.UI;
-using Object = UnityEngine.Object;
 
 namespace FarewellCore.GUI;
 

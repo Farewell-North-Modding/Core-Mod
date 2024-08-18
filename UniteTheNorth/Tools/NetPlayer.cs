@@ -1,4 +1,5 @@
-﻿using MelonLoader;
+﻿using Il2CppTMPro;
+using MelonLoader;
 using UnityEngine;
 
 namespace UniteTheNorth.Tools;
@@ -6,17 +7,29 @@ namespace UniteTheNorth.Tools;
 [RegisterTypeInIl2Cpp]
 public class NetPlayer : MonoBehaviour
 {
-    public float lerpSpeed = 10F;
+    public float lerpSpeed = 6F;
     private Animator? _animator;
     private Vector3 _locationGoal;
     private Quaternion _rotationGoal;
     private AnimatorFloatLerp? _floatLerp;
+    public TextMeshPro? text;
 
     private void Start()
     {
         _animator = GetComponent<Animator>();
         Destroy(GetComponent<Rigidbody>());
         _floatLerp = new AnimatorFloatLerp(_animator);
+        var textObject = new GameObject("NameTag")
+        {
+            transform = { parent = transform }
+        };
+        text = textObject.AddComponent<TextMeshPro>();
+        text.text = "NameTag";
+        text.fontSize = 1.6F;
+        text.color = Color.white;
+        textObject.transform.localPosition = new Vector3(0, 0.8F, 0);
+        text.verticalAlignment = VerticalAlignmentOptions.Middle;
+        text.horizontalAlignment = HorizontalAlignmentOptions.Center;
     }
 
     private void Update()
@@ -30,6 +43,15 @@ public class NetPlayer : MonoBehaviour
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, _rotationGoal, lerpSpeed * Time.deltaTime);
         }
+        if (Camera.main == null) return;
+        text?.transform.LookAt(Camera.main.transform);
+        text?.transform.Rotate(0, 180, 0);
+    }
+
+    public void ReceivePlayerInfo(string username)
+    {
+        if (text != null)
+            text.text = username;
     }
 
     public void ReceiveLocation(Vector3 location)
@@ -56,43 +78,4 @@ public class NetPlayer : MonoBehaviour
     {
         _animator?.SetInteger(id, val);
     }
-
-    /*private Rigidbody? _rigidbody;
-    private PlayerWrapper? _wrapper;
-    public Vector3 moveToPosition;
-    public Vector3 rotateToRotation;
-
-    private void Start()
-    {
-        _wrapper = new PlayerWrapper(gameObject);
-        moveToPosition = transform.position;
-        _rigidbody = GetComponent<Rigidbody>();
-    }
-
-    private void Update()
-    {
-        if (Vector3.Distance(transform.position, moveToPosition) < .3F)
-        {
-            _wrapper?.Animal.RotateAtDirection(rotateToRotation, 5);
-            return;
-        }
-        var direction = (moveToPosition - transform.position).normalized;
-        _wrapper?.Animal.Move(direction);
-        _rigidbody!.velocity = Vector3.zero;
-    }
-
-    public void UpdatePosition(Vector3 position)
-    {
-        moveToPosition = position;
-    }
-
-    public void UpdateRotation(Vector3 rotation)
-    {
-        rotateToRotation = rotation;
-    }
-
-    public void Jump()
-    {
-        _wrapper?.Jump();
-    }*/
 }
