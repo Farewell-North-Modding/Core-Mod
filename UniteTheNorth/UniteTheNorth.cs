@@ -12,6 +12,9 @@ public class UniteTheNorth : FarewellMod
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
         if (sceneName != "Archipelago") return;
+        LocalNetworkManager.RunServer();
+        LocalNetworkManager.RunClient();
+        LocalNetworkManager.RunClient();
         PlayerManager.MainSceneLoaded();
     }
 

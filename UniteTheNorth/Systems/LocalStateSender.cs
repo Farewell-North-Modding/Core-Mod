@@ -120,7 +120,7 @@ public static class LocalStateSender
     {
         PacketManager.Send(new PlayerAnimatePacketC2S(
             id,
-            val, 0
+            0, val
         ), DeliveryMethod.Unreliable);
     }
 
@@ -128,7 +128,7 @@ public static class LocalStateSender
     {
         PacketManager.Send(new PlayerAnimatePacketC2S(
             id,
-            val, 1
+            1, val
         ), DeliveryMethod.Unreliable);
     }
 
@@ -136,7 +136,7 @@ public static class LocalStateSender
     {
         PacketManager.Send(new PlayerAnimatePacketC2S(
             id,
-            val, 2
+            2, val
         ), DeliveryMethod.Unreliable);
     }
 }

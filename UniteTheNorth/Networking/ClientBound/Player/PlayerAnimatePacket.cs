@@ -11,12 +11,12 @@ public class PlayerAnimatePacket : IClientBoundPacket
     [Key(2)] public readonly int Type;
     [Key(3)] public readonly object Value;
 
-    public PlayerAnimatePacket(int id, int propertyHash, object value, int type)
+    public PlayerAnimatePacket(int id, int propertyHash, int type, object value)
     {
         ID = id;
         PropertyHash = propertyHash;
-        Value = value;
         Type = type;
+        Value = value;
     }
 
     public void HandlePacket()

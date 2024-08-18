@@ -2,6 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 using LiteNetLib;
+using MelonLoader;
 using MessagePack;
 using UniteTheNorth.Networking;
 using UniteTheNorth.Networking.BiDirectional;
@@ -12,6 +13,7 @@ using UnityEngine;
 
 namespace UniteTheNorth.Server;
 
+[RegisterTypeInIl2Cpp]
 public class Server : MonoBehaviour, INetEventListener
 {
     private const int Port = 4657;
