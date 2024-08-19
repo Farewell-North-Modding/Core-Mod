@@ -68,7 +68,8 @@ public class Server : MonoBehaviour, INetEventListener
         if (TryGetClient(peer, out var client))
         {
             _clients.Remove(client!.ID);
-            UniteTheNorth.Logger.Msg($"[Server] User {client!.Username} disconnected: {disconnectInfo.Reason}");
+            PacketManager.SendToAll(new ChatMessagePacket($"{client.Username} left the game"));
+            UniteTheNorth.Logger.Msg($"[Server] User {client.Username} disconnected: {disconnectInfo.Reason}");
             PacketManager.SendToAll(new UnregisterPlayerPacket(
                 client.ID    
             ), DeliveryMethod.ReliableOrdered, Channels.System);
@@ -132,5 +133,6 @@ public class Server : MonoBehaviour, INetEventListener
                 client.Username
             ), DeliveryMethod.ReliableOrdered, Channels.System);
         }
+        PacketManager.SendToAll(new ChatMessagePacket($"{newClient.Username} joined the game"));
     }
 }

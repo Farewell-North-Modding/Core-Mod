@@ -41,7 +41,7 @@ public class Client : MonoBehaviour, INetEventListener
 
     public bool IsConnected()
     {
-        return NetClient != null && NetClient.FirstPeer.ConnectionState == ConnectionState.Connected;
+        return NetClient?.FirstPeer?.ConnectionState == ConnectionState.Connected;
     }
 
     private void OnDestroy()

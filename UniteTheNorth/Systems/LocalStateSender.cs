@@ -118,25 +118,25 @@ public static class LocalStateSender
 
     private static void SendAnimatorBool(int id, bool val)
     {
-        PacketManager.Send(new PlayerAnimatePacketC2S(
+        PacketManager.Send(new PlayerAnimateBoolPacketC2S(
             id,
-            0, val
+            val
         ), DeliveryMethod.Unreliable);
     }
 
     private static void SendAnimatorFloat(int id, float val)
     {
-        PacketManager.Send(new PlayerAnimatePacketC2S(
+        PacketManager.Send(new PlayerAnimateFloatPacketC2S(
             id,
-            1, val
+            val
         ), DeliveryMethod.Unreliable);
     }
 
     private static void SendAnimatorInt(int id, int val)
     {
-        PacketManager.Send(new PlayerAnimatePacketC2S(
+        PacketManager.Send(new PlayerAnimateIntPacketC2S(
             id,
-            2, val
+            val
         ), DeliveryMethod.Unreliable);
     }
 }

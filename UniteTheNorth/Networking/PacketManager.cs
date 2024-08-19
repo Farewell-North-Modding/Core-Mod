@@ -22,7 +22,9 @@ public static class PacketManager
         { typeof(UnregisterPlayerPacket), 11 },
         { typeof(PlayerMovePacket), 20 },
         { typeof(PlayerRotatePacket), 21 },
-        { typeof(PlayerAnimatePacket), 22 },
+        { typeof(PlayerAnimateBoolPacket), 22 },
+        { typeof(PlayerAnimateFloatPacket), 23 },
+        { typeof(PlayerAnimateIntPacket), 24 },
     };
     
     /// <summary>
@@ -36,7 +38,9 @@ public static class PacketManager
         // Server Bound (System 10-19; Play 20+)
         { typeof(PlayerMovePacketC2S), 20 },
         { typeof(PlayerRotatePacketC2S), 21 },
-        { typeof(PlayerAnimatePacketC2S), 22 },
+        { typeof(PlayerAnimateBoolPacketC2S), 22 },
+        { typeof(PlayerAnimateFloatPacketC2S), 23 },
+        { typeof(PlayerAnimateIntPacketC2S), 24 },
     };
     
     /// <summary>

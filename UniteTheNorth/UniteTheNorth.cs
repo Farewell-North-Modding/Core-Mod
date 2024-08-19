@@ -1,6 +1,7 @@
 ﻿using MelonLoader;
 using UniteTheNorth.Systems;
 using FarewellCore;
+using UnityEngine.SceneManagement;
 using BuildInfo = UniteTheNorth.Properties.BuildInfo;
 
 namespace UniteTheNorth;
@@ -21,6 +22,7 @@ public class UniteTheNorth : FarewellMod
 
     public override void OnFixedUpdate()
     {
-        LocalStateSender.SendUpdates();
+        if(SceneManager.GetActiveScene().name == "Archipelago")
+            LocalStateSender.SendUpdates();
     }
 }
