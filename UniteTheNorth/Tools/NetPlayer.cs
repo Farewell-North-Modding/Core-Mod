@@ -29,7 +29,7 @@ public class NetPlayer : MonoBehaviour
         _text = textObject.AddComponent<TextMeshPro>();
         _text.text = _username ?? "NameTag";
         _text.fontSize = 1.6F;
-        _text.color = Color.white;
+        _text.color = new Color(220, 220, 220);
         textObject.transform.localPosition = new Vector3(0, 0.8F, 0);
         _text.verticalAlignment = VerticalAlignmentOptions.Middle;
         _text.horizontalAlignment = HorizontalAlignmentOptions.Center;

@@ -31,7 +31,9 @@ public class UniteTheNorth : FarewellMod
 
     public override void OnFixedUpdate()
     {
-        if(SceneManager.GetActiveScene().name == "Archipelago")
-            LocalStateSender.SendUpdates();
+        if (SceneManager.GetActiveScene().name != "Archipelago")
+            return;
+        LocalStateSender.SendUpdates();
+        PlayerManager.UpdateState();
     }
 }

@@ -1,5 +1,7 @@
 ﻿using FarewellCore.Tools;
 using UniteTheNorth.Tools;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace UniteTheNorth.Systems;
 
@@ -13,10 +15,11 @@ public static class PlayerManager
     /// A private method that creates a new NetPlayer from a player dummy (core type)
     /// </summary>
     /// <returns>The newly created NetPlayer instance</returns>
-    private static NetPlayer? CreateNetPlayer()
+    private static NetPlayer CreateNetPlayer()
     {
         var newObject = GameplayFinder.FindPlayer()?.CreatePlayerDummy().GetGameObject();
-        return newObject?.AddComponent<NetPlayer>();
+        newObject!.SetActive(true);
+        return newObject.AddComponent<NetPlayer>();
     }
     
     /// <summary>
@@ -51,7 +54,7 @@ public static class PlayerManager
             if(PlayerCache.TryGetValue(id, out var value))
                 action.Invoke(value);
             else
-                UniteTheNorth.Logger.Msg($"[Client] Tried adding action to unknown player {id}");
+                UniteTheNorth.Logger.Msg($"[Client] Tried running action on unknown player {id}");
             action.Invoke(PlayerCache[id]);
     }
 
@@ -62,15 +65,16 @@ public static class PlayerManager
     /// <param name="username">The players Username</param>
     public static void RegisterPlayer(int id, string username)
     {
-        UniteTheNorth.Logger.Msg($"[Client] Registering player {id} with username {username}");
         if (_isLoading)
         {
+            UniteTheNorth.Logger.Msg($"[Client] Precaching player {id} with username {username}");
             PrePlayCache.Add(id, new PrePlayPlayerCache(id, username));
             return;
         }
         var player = CreateNetPlayer();
-        player!.ReceivePlayerInfo(username);
+        player.ReceivePlayerInfo(username);
         PlayerCache[id] = player;
+        UniteTheNorth.Logger.Msg($"[Client] Registered player {id} with username {username}");
     }
 
     /// <summary>
@@ -79,9 +83,11 @@ public static class PlayerManager
     /// <param name="id">The players ID</param>
     public static void UnregisterPlayer(int id)
     {
-        UniteTheNorth.Logger.Msg($"[Client] Unregistering player {id}");
+        if(PlayerCache.TryGetValue(id, out var player))
+            Object.Destroy(player.gameObject);
         PrePlayCache.Remove(id);
         PlayerCache.Remove(id);
+        UniteTheNorth.Logger.Msg($"[Client] Unregistered player {id}");
     }
 
     /// <summary>
@@ -107,6 +113,17 @@ public static class PlayerManager
         {
             ID = id;
             Username = username;
+        }
+    }
+
+    /// <summary>
+    /// Updates the active state of all NetPlayers
+    /// </summary>
+    public static void UpdateState()
+    {
+        foreach (var player in PlayerCache.Values)
+        {
+            player.gameObject.SetActive(true);
         }
     }
 }
