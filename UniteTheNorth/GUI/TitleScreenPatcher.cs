@@ -17,7 +17,7 @@ public class TitleScreenPatcher : MonoBehaviour
     private void Start()
     {
         ReplaceArtwork();
-        AddConnectUI();
+        Invoke(nameof(AddConnectUI), 2f);
         UniteTheNorth.Logger.Msg("Applied Title Screen Patches");
     }
 
@@ -26,7 +26,7 @@ public class TitleScreenPatcher : MonoBehaviour
         // TODO: Create Artwork and create Replacer
     }
 
-    private static void AddConnectUI()
+    private void AddConnectUI()
     {
         var uiBase = UniversalUI.RegisterUI("com.limo.UniteTheNorth", () => { });
         var connectPanel = new ConnectPanel(uiBase);
