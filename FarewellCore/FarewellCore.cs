@@ -1,5 +1,6 @@
 ﻿using FarewellCore.GUI.Impl;
 using MelonLoader;
+using FarewellCore.Input;
 
 namespace FarewellCore;
 
@@ -18,6 +19,7 @@ public class FarewellCore : FarewellMod
 
     public override void OnUpdate()
     {
+        InputHelper.UpdateCallback();
         RunOnNextUpdate.ForEach(action => action());
         RunOnNextUpdate.Clear();
     }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<!-- Install location - can be defined as a user variable `FarewellNorthLocation` to avoid editing this file when collaborating. -->
 		<FarewellNorthLocation Condition="!Exists('$(FarewellNorthLocation)/GameAssembly.dll')">..\..\..\..\..\SteamLibrary\steamapps\common\Farewell North</FarewellNorthLocation>
@@ -20,6 +20,9 @@
 	<ItemGroup>
 		<Reference Include="$(FarewellNorthLocation)\MelonLoader\net6\*.dll" Exclude="$(FarewellNorthLocation)\MelonLoader\net6\System.Text.Json.dll" />
 		<Reference Include="$(FarewellNorthLocation)\MelonLoader\Il2CppAssemblies\*.dll" />
+	</ItemGroup>
+	<ItemGroup Label="Cross-Mod Dependencies">
+		<Reference Include="$(FarewellNorthLocation)\UserLibs\UniverseLib.IL2CPP.Interop.ML.dll" />
 	</ItemGroup>
 	<Target Name="CopyMod" AfterTargets="PostBuildEvent">
 		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(FarewellNorthLocation)\Mods\" />
