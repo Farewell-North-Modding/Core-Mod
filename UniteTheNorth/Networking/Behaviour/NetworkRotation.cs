@@ -16,9 +16,9 @@ public class NetworkRotation : NetworkBehaviour
     
     private Quaternion _lastRotation = Quaternion.identity;
 
-    private new void Start()
+    private void Start()
     {
-        base.Start();
+        Initialize();
         _rotationGoal = transform.rotation;
         NetworkRegistry.RegisterRotation(this);
         Sender = SendData;
@@ -26,10 +26,17 @@ public class NetworkRotation : NetworkBehaviour
 
     private void Update()
     {
+        if(isHost)
+            return;
         if (Quaternion.Angle(_rotationGoal, transform.rotation) > 3F)
         {
             transform.rotation = Quaternion.Lerp(transform.rotation, _rotationGoal, LerpSpeed * Time.deltaTime);
         }
+    }
+
+    private void FixedUpdate()
+    {
+        DoUpdate();
     }
 
     private int SendData(int syncId)

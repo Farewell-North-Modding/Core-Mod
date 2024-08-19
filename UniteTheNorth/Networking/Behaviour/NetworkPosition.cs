@@ -16,9 +16,9 @@ public class NetworkPosition : NetworkBehaviour
     
     private static Vector3 _lastPosition = Vector3.zero;
 
-    private new void Start()
+    private void Start()
     {
-        base.Start();
+        Initialize();
         _locationGoal = transform.position;
         NetworkRegistry.RegisterPosition(this);
         Sender = SendData;
@@ -26,10 +26,17 @@ public class NetworkPosition : NetworkBehaviour
 
     private void Update()
     {
+        if(isHost)
+            return;
         if (Vector3.Distance(_locationGoal, transform.position) > .1F)
         {
             transform.position = Vector3.Lerp(transform.position, _locationGoal, LerpSpeed * Time.deltaTime);
         }
+    }
+
+    private void FixedUpdate()
+    {
+        DoUpdate();
     }
 
     private int SendData(int syncId)

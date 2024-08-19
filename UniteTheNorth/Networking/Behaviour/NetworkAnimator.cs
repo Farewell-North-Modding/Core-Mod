@@ -20,9 +20,9 @@ public class NetworkAnimator : NetworkBehaviour
     private static float[]? _lastFloats;
     private static int[]? _lastInts;
 
-    private new void Start()
+    private void Start()
     {
-        base.Start();
+        Initialize();
         _animator = GetComponent<Animator>();
         _floatLerp = new AnimatorFloatLerp(_animator);
         NetworkRegistry.RegisterAnimator(this);
@@ -31,7 +31,14 @@ public class NetworkAnimator : NetworkBehaviour
 
     private void Update()
     {
+        if(isHost)
+            return;
         _floatLerp?.Update();
+    }
+
+    private void FixedUpdate()
+    {
+        DoUpdate();
     }
 
     private int SendData(int syncId)

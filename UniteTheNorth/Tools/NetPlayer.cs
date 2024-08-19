@@ -19,10 +19,11 @@ public class NetPlayer : MonoBehaviour
         _camera = Camera.main;
         Destroy(GetComponent<Rigidbody>());
         Destroy(GetComponent<MAnimal>());
-        gameObject.AddComponent<UniqueId>()._id = transform.name;
-        gameObject.AddComponent<NetworkAnimator>();
-        gameObject.AddComponent<NetworkPosition>();
-        gameObject.AddComponent<NetworkRotation>();
+        Destroy(GetComponent<UniqueId>());
+        var syncId = int.Parse(transform.name.Split('-')[1]);
+        gameObject.AddComponent<NetworkAnimator>().OverwriteSyncId(syncId);
+        gameObject.AddComponent<NetworkPosition>().OverwriteSyncId(syncId);
+        gameObject.AddComponent<NetworkRotation>().OverwriteSyncId(syncId);
         var textObject = new GameObject("NameTag")
         {
             transform = { parent = transform }

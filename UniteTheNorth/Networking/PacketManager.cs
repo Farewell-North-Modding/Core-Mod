@@ -3,6 +3,7 @@ using LiteNetLib.Utils;
 using MessagePack;
 using UniteTheNorth.Networking.BiDirectional;
 using UniteTheNorth.Networking.BiDirectional.Generic;
+using UniteTheNorth.Networking.ClientBound;
 using UniteTheNorth.Networking.ClientBound.Player;
 
 namespace UniteTheNorth.Networking;
@@ -17,6 +18,7 @@ public static class PacketManager
         // System Packets
         { typeof(KeepAlivePacket), 0 },
         { typeof(ChatMessagePacket), 1 },
+        { typeof(UserDataPacket), 2 },
         // Important Packets
         { typeof(RegisterPlayerPacket), 10 },
         { typeof(UnregisterPlayerPacket), 11 },

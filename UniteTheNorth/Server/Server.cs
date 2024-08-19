@@ -6,6 +6,7 @@ using MelonLoader;
 using MessagePack;
 using UniteTheNorth.Networking;
 using UniteTheNorth.Networking.BiDirectional;
+using UniteTheNorth.Networking.ClientBound;
 using UniteTheNorth.Networking.ClientBound.Player;
 using UniteTheNorth.Networking.ServerBound;
 using UnityEngine;
@@ -123,6 +124,7 @@ public class Server : MonoBehaviour, INetEventListener
             id++;
         var newClient = _clients[id] = new Client(request.Accept(), packet.Username, id);
         // Send current Data
+        PacketManager.Send(newClient, new UserDataPacket(id), DeliveryMethod.ReliableOrdered, Channels.System);
         foreach (var client in _clients.Values.Where(client => client != newClient))
         {
             PacketManager.Send(client, new RegisterPlayerPacket(

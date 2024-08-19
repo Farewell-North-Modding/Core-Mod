@@ -10,6 +10,7 @@ namespace UniteTheNorth.Networking.Behaviour;
 [RegisterTypeInIl2Cpp]
 public class NetworkBehaviour : MonoBehaviour
 {
+    public bool isHost;
     private int _sendDelay = 10;
     private int? _syncId;
 
@@ -22,26 +23,37 @@ public class NetworkBehaviour : MonoBehaviour
     /// <summary>
     /// Initializes the sync id, registers the object with the network registry and should always be called!
     /// </summary>
-    protected void Start()
+    protected void Initialize()
     {
-        var uid = GetComponent<UniqueId>();
-        if(uid == null)
-            UniteTheNorth.Logger.Warning($"[Client] Missing UniqueId for NetworkBehaviour on {gameObject.name}");
-        else
+        if(_syncId != null)
+            return;
+        if (TryGetComponent(out UniqueId uid))
             _syncId = uid.ID.GetHashCode();
+        else
+            UniteTheNorth.Logger.Warning($"[Client] Missing UniqueId or Overwrite for NetworkBehaviour on {gameObject.name}");
+        UniteTheNorth.Logger.Msg($"[Client] NetworkId: {_syncId}");
     }
 
     /// <summary>
     /// This function will update the sender and should be called if the SendData method isn't empty.
     /// </summary>
-    protected void FixedUpdate()
+    protected void DoUpdate()
     {
-        if(_syncId == null || Sender == null)
+        if(!isHost || _syncId == null || Sender == null)
             return;
         _sendDelay--;
         if(_sendDelay > 0)
             return;
         _sendDelay = Sender(_syncId ?? 0);
+    }
+
+    /// <summary>
+    /// Overwrites this elements sync id
+    /// </summary>
+    /// <param name="syncId">The new sync id</param>
+    public void OverwriteSyncId(int syncId)
+    {
+        _syncId = syncId;
     }
 
     /// <summary>
