@@ -23,6 +23,7 @@ public class ConnectPanel : PanelBase
         {
             LocalNetworkManager.HostServer = val;
         }));
+        serverToggle.isOn = false;
         hostToggleText.text = "Host Server?";
         UIFactory.SetLayoutElement(serverToggle.gameObject, minWidth: 400, minHeight: 25);
         var port = UIFactory.CreateInputField(ContentRoot, "Port", "Port (Default 4657)");
