@@ -21,6 +21,7 @@ public class NetworkPosition : NetworkBehaviour
         base.Start();
         _locationGoal = transform.position;
         NetworkRegistry.RegisterPosition(this);
+        Sender = SendData;
     }
 
     private void Update()
@@ -31,7 +32,7 @@ public class NetworkPosition : NetworkBehaviour
         }
     }
 
-    protected override int SendData(int syncId)
+    private int SendData(int syncId)
     {
         if (!(Vector3.Distance(_lastPosition, transform.position) > .01F)) return 2;
         _lastPosition = transform.position;

@@ -26,6 +26,7 @@ public class NetworkAnimator : NetworkBehaviour
         _animator = GetComponent<Animator>();
         _floatLerp = new AnimatorFloatLerp(_animator);
         NetworkRegistry.RegisterAnimator(this);
+        Sender = SendData;
     }
 
     private void Update()
@@ -33,7 +34,7 @@ public class NetworkAnimator : NetworkBehaviour
         _floatLerp?.Update();
     }
 
-    protected override int SendData(int syncId)
+    private int SendData(int syncId)
     {
         var parameters = _animator?.parameters;
         if(parameters == null || _animator == null)

@@ -8,10 +8,16 @@ namespace UniteTheNorth.Networking.Behaviour;
 /// A base class inheriting MonoBehaviour that handles sending packets and retrieving the sync id
 /// </summary>
 [RegisterTypeInIl2Cpp]
-public abstract class NetworkBehaviour : MonoBehaviour
+public class NetworkBehaviour : MonoBehaviour
 {
     private int _sendDelay = 10;
     private int? _syncId;
+
+    /// <summary>
+    /// This function should send all data
+    /// </summary>
+    /// <returns>The amount to wait until sending again</returns>
+    protected Func<int, int>? Sender = null;
 
     /// <summary>
     /// Initializes the sync id, registers the object with the network registry and should always be called!
@@ -30,19 +36,13 @@ public abstract class NetworkBehaviour : MonoBehaviour
     /// </summary>
     protected void FixedUpdate()
     {
-        if(_syncId == null)
+        if(_syncId == null || Sender == null)
             return;
         _sendDelay--;
         if(_sendDelay > 0)
             return;
-        _sendDelay = SendData(_syncId ?? 0);
+        _sendDelay = Sender(_syncId ?? 0);
     }
-
-    /// <summary>
-    /// This function should send all data
-    /// </summary>
-    /// <returns>The amount to wait until sending again</returns>
-    protected abstract int SendData(int syncId);
 
     /// <summary>
     /// Gets the elements sync id

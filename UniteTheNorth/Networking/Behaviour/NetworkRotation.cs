@@ -21,6 +21,7 @@ public class NetworkRotation : NetworkBehaviour
         base.Start();
         _rotationGoal = transform.rotation;
         NetworkRegistry.RegisterRotation(this);
+        Sender = SendData;
     }
 
     private void Update()
@@ -31,7 +32,7 @@ public class NetworkRotation : NetworkBehaviour
         }
     }
 
-    protected override int SendData(int syncId)
+    private int SendData(int syncId)
     {
         if (!(Quaternion.Angle(_lastRotation, transform.rotation) > 3F)) return 2;
         _lastRotation = transform.rotation;
