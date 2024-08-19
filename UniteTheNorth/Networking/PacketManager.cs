@@ -55,7 +55,7 @@ public static class PacketManager
             throw new NotImplementedException($"Invalid Packet Type: {packet.GetType().Name}");
         var writer = new NetDataWriter();
         writer.Put(id);
-        writer.Put(MessagePackSerializer.Serialize(packet));
+        writer.Put(MessagePackSerializer.Serialize(packet.GetType(), packet));
         return writer;
     }
 
