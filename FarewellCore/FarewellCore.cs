@@ -1,5 +1,4 @@
 ﻿using FarewellCore.GUI.Impl;
-using FarewellCore.Tools;
 using MelonLoader;
 
 namespace FarewellCore;
@@ -26,7 +25,5 @@ public class FarewellCore : FarewellMod
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
         TitleScreenPatcher.Patch(sceneName);
-        if (sceneName == "Archipelago")
-            GameplayFinder.FindPlayer()?.CreatePlayerDummy();
     }
 }

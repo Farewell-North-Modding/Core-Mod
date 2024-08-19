@@ -28,7 +28,6 @@ public class TitleScreenPatcher : MonoBehaviour
 
     private static void AddConnectUI()
     {
-        UniverseLib.Universe.Init();
         var uiBase = UniversalUI.RegisterUI("com.limo.UniteTheNorth", () => { });
         var connectPanel = new ConnectPanel(uiBase);
     }
