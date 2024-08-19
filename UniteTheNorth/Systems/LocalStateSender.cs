@@ -23,7 +23,7 @@ public static class LocalStateSender
         _messageCooldown--;
         if(_messageCooldown > 0)
             return;
-        _messageCooldown = 4;
+        _messageCooldown = 3;
         
         // Find Player
         var player = GameplayFinder.FindPlayer();
@@ -105,7 +105,7 @@ public static class LocalStateSender
     private static void SendLocation(Vector3 location)
     {
         PacketManager.Send(new PlayerMovePacketC2S(
-            location + new Vector3(2, 0, 0)
+            location
         ), DeliveryMethod.ReliableSequenced, Channels.Important);
     }
 

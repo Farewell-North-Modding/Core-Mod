@@ -30,7 +30,7 @@ public class Client : MonoBehaviour, INetEventListener
             ChannelsCount = 4
         };
         var writer = new NetDataWriter();
-        writer.Put(MessagePackSerializer.Serialize(new UserConnectPacket(Username, Password)));
+        writer.Put(MessagePackSerializer.Serialize(new UserConnectPacket(UniteTheNorth.Version, Username, Password)));
         NetClient.Start();
         NetClient.Connect(new IPEndPoint(IPAddress.Parse(Ip), Port), writer);
         UniteTheNorth.Logger.Msg("[Client] Connecting to server...");

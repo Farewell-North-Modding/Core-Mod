@@ -9,9 +9,9 @@ public class UserConnectPacket
     [Key(1)] public readonly string Username;
     [Key(2)] public readonly string Password;
 
-    public UserConnectPacket(string username, string password)
+    public UserConnectPacket(string version, string username, string password)
     {
-        Version = UniteTheNorth.Version;
+        Version = version;
         Username = username;
         Password = password;
     }
