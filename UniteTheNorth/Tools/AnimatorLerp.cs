@@ -17,7 +17,7 @@ public class AnimatorFloatLerp
     {
         foreach (var id in _goalDict.Keys)
         {
-            _currentDict[id] = Mathf.Lerp(_currentDict[id], _goalDict[id], Time.deltaTime);
+            _currentDict[id] = Mathf.Lerp(_currentDict[id], _goalDict[id], 2 * Time.deltaTime);
             _animator.SetFloat(id, _currentDict[id]);
             if (Mathf.Abs(_currentDict[id] - _goalDict[id]) < .01F)
                 _goalDict.Remove(id);

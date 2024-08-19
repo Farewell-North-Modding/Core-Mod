@@ -7,7 +7,7 @@ namespace UniteTheNorth.Tools;
 [RegisterTypeInIl2Cpp]
 public class NetPlayer : MonoBehaviour
 {
-    public float lerpSpeed = 6F;
+    public float lerpSpeed = 5F;
     private Animator? _animator;
     private Vector3 _locationGoal;
     private Quaternion _rotationGoal;

@@ -31,6 +31,7 @@ public static class LocalNetworkManager
             RunServer();
             Address = "127.0.0.1";
         }
+        Client.Password = Password;
         Client.Port = port;
         Client.Ip = Address;
         Client.Username = Username;
@@ -40,7 +41,7 @@ public static class LocalNetworkManager
     /// <summary>
     /// Starts a local server instance
     /// </summary>
-    public static void RunServer()
+    private static void RunServer()
     {
         var obj = new GameObject("UniteTheNorthServer");
         obj.AddComponent<Server.Server>();
@@ -50,7 +51,7 @@ public static class LocalNetworkManager
     /// <summary>
     /// Starts a client instance
     /// </summary>
-    public static void RunClient()
+    private static void RunClient()
     {
         var obj = new GameObject("UniteTheNorthClient");
         obj.AddComponent<Client>();

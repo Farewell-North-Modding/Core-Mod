@@ -16,6 +16,7 @@ public class Client : MonoBehaviour, INetEventListener
     public static string Ip = "127.0.0.1";
     public static int Port = 4657;
     public static string Username = "Test";
+    public static string Password = "";
     public static Client? Instance;
 
     public NetManager? NetClient;
@@ -29,7 +30,7 @@ public class Client : MonoBehaviour, INetEventListener
             ChannelsCount = 4
         };
         var writer = new NetDataWriter();
-        writer.Put(MessagePackSerializer.Serialize(new UserConnectPacket(Username, "")));
+        writer.Put(MessagePackSerializer.Serialize(new UserConnectPacket(Username, Password)));
         NetClient.Start();
         NetClient.Connect(new IPEndPoint(IPAddress.Parse(Ip), Port), writer);
         UniteTheNorth.Logger.Msg("[Client] Connecting to server...");

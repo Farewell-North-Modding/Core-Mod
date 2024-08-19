@@ -21,9 +21,11 @@ public class UniteTheNorth : FarewellMod
     {
         TitleScreenPatcher.Patch(sceneName);
         if (sceneName != "Archipelago") return;
+        /* Only meant for local testing
         LocalNetworkManager.RunServer();
         LocalNetworkManager.RunClient();
-        LocalNetworkManager.RunClient();
+        LocalNetworkManager.RunClient();*/
+        LocalNetworkManager.InitializeLocal();
         PlayerManager.MainSceneLoaded();
     }
 
