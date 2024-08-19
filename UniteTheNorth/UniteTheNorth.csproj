@@ -22,16 +22,20 @@
 		<Reference Include="$(FarewellNorthLocation)\MelonLoader\Il2CppAssemblies\*.dll" />
 	</ItemGroup>
     <ItemGroup>
-        <PackageReference Include="LiteNetLib" Version="1.2.0" />
-        <PackageReference Include="MessagePack" Version="3.0.134-beta" />
-        <PackageReference Include="MessagePack.Annotations" Version="3.0.134-beta" />
         <PackageReference Include="MessagePackAnalyzer" Version="3.0.134-beta">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
+		<PackageReference Include="UniverseLib.Analyzers" Version="1.0.4">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
     </ItemGroup>
 	<ItemGroup Label="Cross-Mod Dependencies">
 		<Reference Include="$(FarewellNorthLocation)\Mods\FarewellCore.dll" />
+	</ItemGroup>
+	<ItemGroup Label="User Libs">
+		<Reference Include="$(FarewellNorthLocation)\UserLibs\*.dll" />
 	</ItemGroup>
 	<Target Name="CopyMod" AfterTargets="PostBuildEvent">
 		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(FarewellNorthLocation)\Mods\" />

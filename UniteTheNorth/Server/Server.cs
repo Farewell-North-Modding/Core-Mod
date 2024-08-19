@@ -15,8 +15,8 @@ namespace UniteTheNorth.Server;
 [RegisterTypeInIl2Cpp]
 public class Server : MonoBehaviour, INetEventListener
 {
-    private const int Port = 4657;
-    private const string? Password = null;
+    public static int Port = 4657;
+    public static string? Password = null;
     public static Server? Instance;
     
     public NetManager? NetServer;

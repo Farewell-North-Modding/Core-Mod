@@ -13,9 +13,9 @@ namespace UniteTheNorth.Networking;
 [RegisterTypeInIl2Cpp]
 public class Client : MonoBehaviour, INetEventListener
 {
-    private const string Ip = "127.0.0.1";
-    private const int Port = 4657;
-    private const string Username = "Test";
+    public static string Ip = "127.0.0.1";
+    public static int Port = 4657;
+    public static string Username = "Test";
     public static Client? Instance;
 
     public NetManager? NetClient;

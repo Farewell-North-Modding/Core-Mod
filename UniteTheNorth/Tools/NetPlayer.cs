@@ -12,7 +12,8 @@ public class NetPlayer : MonoBehaviour
     private Vector3 _locationGoal;
     private Quaternion _rotationGoal;
     private AnimatorFloatLerp? _floatLerp;
-    public TextMeshPro? text;
+    private string? _username;
+    private TextMeshPro? _text;
 
     private void Start()
     {
@@ -23,13 +24,13 @@ public class NetPlayer : MonoBehaviour
         {
             transform = { parent = transform }
         };
-        text = textObject.AddComponent<TextMeshPro>();
-        text.text = "NameTag";
-        text.fontSize = 1.6F;
-        text.color = Color.white;
+        _text = textObject.AddComponent<TextMeshPro>();
+        _text.text = _username ?? "NameTag";
+        _text.fontSize = 1.6F;
+        _text.color = Color.white;
         textObject.transform.localPosition = new Vector3(0, 0.8F, 0);
-        text.verticalAlignment = VerticalAlignmentOptions.Middle;
-        text.horizontalAlignment = HorizontalAlignmentOptions.Center;
+        _text.verticalAlignment = VerticalAlignmentOptions.Middle;
+        _text.horizontalAlignment = HorizontalAlignmentOptions.Center;
     }
 
     private void Update()
@@ -44,14 +45,15 @@ public class NetPlayer : MonoBehaviour
             transform.rotation = Quaternion.Lerp(transform.rotation, _rotationGoal, lerpSpeed * Time.deltaTime);
         }
         if (Camera.main == null) return;
-        text?.transform.LookAt(Camera.main.transform);
-        text?.transform.Rotate(0, 180, 0);
+        _text?.transform.LookAt(Camera.main.transform);
+        _text?.transform.Rotate(0, 180, 0);
     }
 
     public void ReceivePlayerInfo(string username)
     {
-        if (text != null)
-            text.text = username;
+        _username = username;
+        if (_text != null)
+            _text.text = username;
     }
 
     public void ReceiveLocation(Vector3 location)
