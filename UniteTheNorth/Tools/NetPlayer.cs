@@ -1,4 +1,5 @@
-﻿using Il2CppTMPro;
+﻿using Il2CppMalbersAnimations.Controller;
+using Il2CppTMPro;
 using MelonLoader;
 using UnityEngine;
 
@@ -17,8 +18,9 @@ public class NetPlayer : MonoBehaviour
 
     private void Start()
     {
-        _animator = GetComponent<Animator>();
         Destroy(GetComponent<Rigidbody>());
+        Destroy(GetComponent<MAnimal>());
+        _animator = GetComponent<Animator>();
         _floatLerp = new AnimatorFloatLerp(_animator);
         var textObject = new GameObject("NameTag")
         {

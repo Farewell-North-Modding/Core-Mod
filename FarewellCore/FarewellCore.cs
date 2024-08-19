@@ -1,19 +1,32 @@
-﻿using FarewellCore.GUI;
-using FarewellCore.GUI.Impl;
+﻿using FarewellCore.GUI.Impl;
+using FarewellCore.Tools;
 using MelonLoader;
 
 namespace FarewellCore;
 
 public class FarewellCore : FarewellMod
 {
-    public static MelonLogger.Instance Logger { get { return Melon<FarewellCore>.Logger; } }
+    /// <summary>
+    /// All actions in this list will be run on the next non-fixed update. The List is cleared after updating. The List should never be modified in the containing actions.
+    /// </summary>
+    public static readonly List<Action> RunOnNextUpdate = new();
+    
+    public static MelonLogger.Instance Logger => Melon<FarewellCore>.Logger;
 
     public override void OnInitializeMelon()
     {
     }
 
+    public override void OnUpdate()
+    {
+        RunOnNextUpdate.ForEach(action => action());
+        RunOnNextUpdate.Clear();
+    }
+
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
         TitleScreenPatcher.Patch(sceneName);
+        if (sceneName == "Archipelago")
+            GameplayFinder.FindPlayer()?.CreatePlayerDummy();
     }
 }
