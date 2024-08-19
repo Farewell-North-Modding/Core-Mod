@@ -1,6 +1,6 @@
 ﻿namespace FarewellCore.GUI;
 
-public class ModsScreen
+public class FarewellUI
 {
     
 }

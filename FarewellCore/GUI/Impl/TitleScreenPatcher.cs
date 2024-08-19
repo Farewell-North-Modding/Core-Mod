@@ -5,7 +5,7 @@ using MelonLoader;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace FarewellCore.GUI;
+namespace FarewellCore.GUI.Impl;
 
 [RegisterTypeInIl2Cpp]
 public class TitleScreenPatcher : MonoBehaviour

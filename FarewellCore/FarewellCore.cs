@@ -1,4 +1,5 @@
 ﻿using FarewellCore.GUI;
+using FarewellCore.GUI.Impl;
 using MelonLoader;
 
 namespace FarewellCore;

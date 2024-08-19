@@ -21,9 +21,6 @@
 		<Reference Include="$(FarewellNorthLocation)\MelonLoader\net6\*.dll" Exclude="$(FarewellNorthLocation)\MelonLoader\net6\System.Text.Json.dll" />
 		<Reference Include="$(FarewellNorthLocation)\MelonLoader\Il2CppAssemblies\*.dll" />
 	</ItemGroup>
-	<ItemGroup Label="Cross-Mod Dependencies">
-		
-	</ItemGroup>
 	<Target Name="CopyMod" AfterTargets="PostBuildEvent">
 		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(FarewellNorthLocation)\Mods\" />
 	</Target>
