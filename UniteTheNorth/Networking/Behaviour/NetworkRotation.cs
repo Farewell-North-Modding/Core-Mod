@@ -20,7 +20,7 @@ public class NetworkRotation : NetworkBehaviour
     {
         base.Start();
         _rotationGoal = transform.rotation;
-        NetworkRegistry.Instance.RegisterRotation(this);
+        NetworkRegistry.RegisterRotation(this);
     }
 
     private void Update()

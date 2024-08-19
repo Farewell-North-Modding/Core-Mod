@@ -33,7 +33,6 @@ public class UniteTheNorth : FarewellMod
     {
         if (SceneManager.GetActiveScene().name != "Archipelago")
             return;
-        LocalStateSender.SendUpdates();
         PlayerManager.UpdateState();
     }
 }

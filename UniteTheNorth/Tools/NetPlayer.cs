@@ -1,6 +1,8 @@
-﻿using Il2CppMalbersAnimations.Controller;
+﻿using Il2CppKBCore.Persistence;
+using Il2CppMalbersAnimations.Controller;
 using Il2CppTMPro;
 using MelonLoader;
+using UniteTheNorth.Networking.Behaviour;
 using UnityEngine;
 
 namespace UniteTheNorth.Tools;
@@ -8,20 +10,19 @@ namespace UniteTheNorth.Tools;
 [RegisterTypeInIl2Cpp]
 public class NetPlayer : MonoBehaviour
 {
-    public float lerpSpeed = 5F;
-    private Animator? _animator;
-    private Vector3 _locationGoal;
-    private Quaternion _rotationGoal;
-    private AnimatorFloatLerp? _floatLerp;
     private string? _username;
     private TextMeshPro? _text;
+    private Camera? _camera;
 
     private void Start()
     {
+        _camera = Camera.main;
         Destroy(GetComponent<Rigidbody>());
         Destroy(GetComponent<MAnimal>());
-        _animator = GetComponent<Animator>();
-        _floatLerp = new AnimatorFloatLerp(_animator);
+        gameObject.AddComponent<UniqueId>()._id = transform.name;
+        gameObject.AddComponent<NetworkAnimator>();
+        gameObject.AddComponent<NetworkPosition>();
+        gameObject.AddComponent<NetworkRotation>();
         var textObject = new GameObject("NameTag")
         {
             transform = { parent = transform }
@@ -37,17 +38,8 @@ public class NetPlayer : MonoBehaviour
 
     private void Update()
     {
-        _floatLerp?.Update();
-        if (Vector3.Distance(_locationGoal, transform.position) > .1F)
-        {
-            transform.position = Vector3.Lerp(transform.position, _locationGoal, lerpSpeed * Time.deltaTime);
-        }
-        if (Quaternion.Angle(_rotationGoal, transform.rotation) > 3F)
-        {
-            transform.rotation = Quaternion.Lerp(transform.rotation, _rotationGoal, lerpSpeed * Time.deltaTime);
-        }
-        if (Camera.main == null) return;
-        _text?.transform.LookAt(Camera.main.transform);
+        if (_camera is null) return;
+        _text?.transform.LookAt(_camera.transform);
         _text?.transform.Rotate(0, 180, 0);
     }
 
@@ -56,30 +48,5 @@ public class NetPlayer : MonoBehaviour
         _username = username;
         if (_text != null)
             _text.text = username;
-    }
-
-    public void ReceiveLocation(Vector3 location)
-    {
-        _locationGoal = location;
-    }
-
-    public void ReceiveRotation(Quaternion rotation)
-    {
-        _rotationGoal = rotation;
-    }
-
-    public void ReceiveAnimationBool(int id, bool val)
-    {
-        _animator?.SetBool(id, val);
-    }
-
-    public void ReceiveAnimationFloat(int id, float val)
-    {
-        _floatLerp?.SetFloat(id, val);
-    }
-
-    public void ReceiveAnimationInt(int id, int val)
-    {
-        _animator?.SetInteger(id, val);
     }
 }

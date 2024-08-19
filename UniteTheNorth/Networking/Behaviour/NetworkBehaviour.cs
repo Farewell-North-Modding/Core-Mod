@@ -43,4 +43,13 @@ public abstract class NetworkBehaviour : MonoBehaviour
     /// </summary>
     /// <returns>The amount to wait until sending again</returns>
     protected abstract int SendData(int syncId);
+
+    /// <summary>
+    /// Gets the elements sync id
+    /// </summary>
+    /// <returns>The sync id based on the UniqueId component</returns>
+    public int GetSyncId()
+    {
+        return _syncId ?? -1;
+    }
 }

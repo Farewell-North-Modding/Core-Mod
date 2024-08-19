@@ -2,8 +2,8 @@
 using LiteNetLib.Utils;
 using MessagePack;
 using UniteTheNorth.Networking.BiDirectional;
+using UniteTheNorth.Networking.BiDirectional.Generic;
 using UniteTheNorth.Networking.ClientBound.Player;
-using UniteTheNorth.Networking.ServerBound.Player;
 
 namespace UniteTheNorth.Networking;
 
@@ -14,17 +14,18 @@ public static class PacketManager
     /// </summary>
     public static readonly Dictionary<Type, int> ClientBoundMap = new()
     {
-        // Bi Directional (0-9)
+        // System Packets
         { typeof(KeepAlivePacket), 0 },
         { typeof(ChatMessagePacket), 1 },
-        // Client Bound (System 10-19; Play 20+)
+        // Important Packets
         { typeof(RegisterPlayerPacket), 10 },
         { typeof(UnregisterPlayerPacket), 11 },
-        { typeof(PlayerMovePacket), 20 },
-        { typeof(PlayerRotatePacket), 21 },
-        { typeof(PlayerAnimateBoolPacket), 22 },
-        { typeof(PlayerAnimateFloatPacket), 23 },
-        { typeof(PlayerAnimateIntPacket), 24 },
+        // Play Packets
+        { typeof(MovePacket), 20 },
+        { typeof(RotatePacket), 21 },
+        { typeof(AnimateBoolPacket), 22 },
+        { typeof(AnimateFloatPacket), 23 },
+        { typeof(AnimateIntPacket), 24 },
     };
     
     /// <summary>
@@ -32,15 +33,15 @@ public static class PacketManager
     /// </summary>
     public static readonly Dictionary<Type, int> ServerBoundMap = new()
     {
-        // Bi Directional (0-9)
+        // System Packets
         { typeof(KeepAlivePacket), 0 },
         { typeof(ChatMessagePacket), 1 },
-        // Server Bound (System 10-19; Play 20+)
-        { typeof(PlayerMovePacketC2S), 20 },
-        { typeof(PlayerRotatePacketC2S), 21 },
-        { typeof(PlayerAnimateBoolPacketC2S), 22 },
-        { typeof(PlayerAnimateFloatPacketC2S), 23 },
-        { typeof(PlayerAnimateIntPacketC2S), 24 },
+        // Play Packets
+        { typeof(MovePacket), 20 },
+        { typeof(RotatePacket), 21 },
+        { typeof(AnimateBoolPacket), 22 },
+        { typeof(AnimateFloatPacket), 23 },
+        { typeof(AnimateIntPacket), 24 },
     };
     
     /// <summary>

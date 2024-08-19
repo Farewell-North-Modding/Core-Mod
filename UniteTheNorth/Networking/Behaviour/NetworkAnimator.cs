@@ -25,7 +25,7 @@ public class NetworkAnimator : NetworkBehaviour
         base.Start();
         _animator = GetComponent<Animator>();
         _floatLerp = new AnimatorFloatLerp(_animator);
-        NetworkRegistry.Instance.RegisterAnimator(this);
+        NetworkRegistry.RegisterAnimator(this);
     }
 
     private void Update()

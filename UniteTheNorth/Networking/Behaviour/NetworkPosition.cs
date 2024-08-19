@@ -20,7 +20,7 @@ public class NetworkPosition : NetworkBehaviour
     {
         base.Start();
         _locationGoal = transform.position;
-        NetworkRegistry.Instance.RegisterPosition(this);
+        NetworkRegistry.RegisterPosition(this);
     }
 
     private void Update()

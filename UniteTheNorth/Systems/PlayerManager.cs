@@ -1,6 +1,5 @@
 ﻿using FarewellCore.Tools;
 using UniteTheNorth.Tools;
-using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace UniteTheNorth.Systems;
@@ -15,10 +14,11 @@ public static class PlayerManager
     /// A private method that creates a new NetPlayer from a player dummy (core type)
     /// </summary>
     /// <returns>The newly created NetPlayer instance</returns>
-    private static NetPlayer CreateNetPlayer()
+    private static NetPlayer CreateNetPlayer(int id)
     {
         var newObject = GameplayFinder.FindPlayer()?.CreatePlayerDummy().GetGameObject();
         newObject!.SetActive(true);
+        newObject.transform.name = "NetPlayer-" + id;
         return newObject.AddComponent<NetPlayer>();
     }
     
@@ -31,31 +31,7 @@ public static class PlayerManager
         foreach (var cached in PrePlayCache.Values)
         {
             RegisterPlayer(cached.ID, cached.Username);
-            foreach (var action in cached.ActionQueue)
-            {
-                action.Invoke(PlayerCache[cached.ID]);
-            }
         }
-    }
-
-    /// <summary>
-    /// Runs an action on the player once the game is loaded
-    /// </summary>
-    /// <param name="id">The players ID</param>
-    /// <param name="action">The action to run</param>
-    public static void RunOnPlayer(int id, Action<NetPlayer> action)
-    {
-        if(_isLoading)
-            if(PrePlayCache.TryGetValue(id, out var value))
-                value.ActionQueue.Add(action);
-            else
-                UniteTheNorth.Logger.Msg($"[Client] Tried adding action to unknown player {id}");
-        else
-            if(PlayerCache.TryGetValue(id, out var value))
-                action.Invoke(value);
-            else
-                UniteTheNorth.Logger.Msg($"[Client] Tried running action on unknown player {id}");
-            action.Invoke(PlayerCache[id]);
     }
 
     /// <summary>
@@ -71,7 +47,7 @@ public static class PlayerManager
             PrePlayCache.Add(id, new PrePlayPlayerCache(id, username));
             return;
         }
-        var player = CreateNetPlayer();
+        var player = CreateNetPlayer(id);
         player.ReceivePlayerInfo(username);
         PlayerCache[id] = player;
         UniteTheNorth.Logger.Msg($"[Client] Registered player {id} with username {username}");
@@ -107,7 +83,6 @@ public static class PlayerManager
     {
         public readonly int ID;
         public readonly string Username;
-        public readonly List<Action<NetPlayer>> ActionQueue = new();
 
         public PrePlayPlayerCache(int id, string username)
         {
