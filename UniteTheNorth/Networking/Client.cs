@@ -25,13 +25,14 @@ public class Client : MonoBehaviour, INetEventListener
         Instance = this;
         NetClient = new NetManager(this)
         {
-            UnconnectedMessagesEnabled = true,
             UpdateTime = 15,
             ChannelsCount = 4
         };
         var writer = new NetDataWriter();
         writer.Put(MessagePackSerializer.Serialize(new UserConnectPacket(Username, "")));
+        NetClient.Start();
         NetClient.Connect(new IPEndPoint(IPAddress.Parse(Ip), Port), writer);
+        UniteTheNorth.Logger.Msg("[Client] Connecting to server...");
     }
 
     private void Update()

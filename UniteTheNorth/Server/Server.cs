@@ -6,7 +6,6 @@ using MelonLoader;
 using MessagePack;
 using UniteTheNorth.Networking;
 using UniteTheNorth.Networking.BiDirectional;
-using UniteTheNorth.Networking.ClientBound;
 using UniteTheNorth.Networking.ClientBound.Player;
 using UniteTheNorth.Networking.ServerBound;
 using UnityEngine;
@@ -29,9 +28,11 @@ public class Server : MonoBehaviour, INetEventListener
         Instance = this;
         NetServer = new NetManager(this)
         {
-            UpdateTime = 15
+            UpdateTime = 15,
+            ChannelsCount = 4
         };
         NetServer.Start(Port);
+        UniteTheNorth.Logger.Msg($"[Server] Server running on port {Port}");
     }
 
     private void Update()
