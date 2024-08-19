@@ -5,7 +5,7 @@ namespace UniteTheNorth.Systems;
 
 public static class PlayerManager
 {
-    private static bool _isLoading;
+    private static bool _isLoading = true;
     private static readonly Dictionary<int, PrePlayPlayerCache> PrePlayCache = new();
     private static readonly Dictionary<int, NetPlayer> PlayerCache = new();
     
@@ -62,6 +62,7 @@ public static class PlayerManager
     /// <param name="username">The players Username</param>
     public static void RegisterPlayer(int id, string username)
     {
+        UniteTheNorth.Logger.Msg($"[Client] Registering player {id} with username {username}");
         if (_isLoading)
         {
             PrePlayCache.Add(id, new PrePlayPlayerCache(id, username));
@@ -78,6 +79,7 @@ public static class PlayerManager
     /// <param name="id">The players ID</param>
     public static void UnregisterPlayer(int id)
     {
+        UniteTheNorth.Logger.Msg($"[Client] Unregistering player {id}");
         PrePlayCache.Remove(id);
         PlayerCache.Remove(id);
     }
