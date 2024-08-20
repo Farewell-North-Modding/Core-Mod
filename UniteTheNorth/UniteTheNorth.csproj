@@ -26,10 +26,6 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-		<PackageReference Include="UniverseLib.Analyzers" Version="1.0.4">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
     </ItemGroup>
 	<ItemGroup Label="Cross-Mod Dependencies">
 		<Reference Include="$(FarewellNorthLocation)\Mods\FarewellCore.dll" />
