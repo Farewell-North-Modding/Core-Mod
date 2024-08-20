@@ -1,5 +1,6 @@
 ﻿using Il2CppFarewellNorth.UI.Settings;
 using Il2CppKBCore.Localization;
+using Il2CppKBCore.Settings.UI.Elements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
@@ -81,6 +82,8 @@ public static class ComponentRegistry
             var toggle = panel.transform.GetChild(3);
             toggle.SetParent(cacheCanvas.transform);
             toggle.name = "FarewellToggle";
+            Object.DestroyImmediate(toggle.GetComponent<SettingsBoolValueUI>());
+            Object.DestroyImmediate(toggle.GetChild(0).GetChild(0).GetComponent<LocalizedTextMeshPro>());
             Components[ComponentType.Toggle] = toggle.gameObject;
             // Create Label Cache
             var unusedBool = panel.transform.GetChild(2);

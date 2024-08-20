@@ -1,5 +1,4 @@
-﻿using FarewellCore.GUI.Component;
-using Il2CppKBCore.Localization;
+﻿using Il2CppKBCore.Localization;
 using Il2CppRTLTMPro;
 using Il2CppTMPro;
 using MelonLoader;
@@ -32,6 +31,14 @@ public class TitleScreenPatcher : MonoBehaviour
             var vLayout = layout.AddVerticalLayout();
             vLayout.AddLabel("a horizontal layout with a");
             vLayout.AddLabel("vertical layout inside!");
+            panel.AddLabel("This is a toggle without a label");
+            panel.AddToggleElement().SetValue(true);
+            var toggle = panel.AddToggleElement("This is a toggle with a label");
+            toggle.SetValue(false);
+            toggle.add_OnValueChanged(new Action<bool>(val =>
+            {
+                FarewellCore.Logger.Msg($"Toggled: {val}");
+            }));
         });
         FarewellCore.Logger.Msg("Applied Title Screen Patches");
     }

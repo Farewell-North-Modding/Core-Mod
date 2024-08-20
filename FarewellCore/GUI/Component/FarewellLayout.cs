@@ -1,7 +1,9 @@
-﻿using Il2CppRTLTMPro;
+﻿using Il2CppKBCore.UI;
+using Il2CppRTLTMPro;
 using MelonLoader;
 using UnityEngine;
 using UnityEngine.UI;
+using Object = UnityEngine.Object;
 
 namespace FarewellCore.GUI.Component;
 
@@ -88,10 +90,25 @@ public class FarewellLayout : MonoBehaviour
         return layout.AddComponent<FarewellLayout>();
     }
 
-    public FarewellToggle AddToggleElement(string label)
+    /// <summary>
+    /// Adds an on off toggle entry like in the settings
+    /// </summary>
+    /// <param name="label">The text on the left of the toggle. Is removed when not given.</param>
+    /// <returns>Game-internal UIToggle element for further use</returns>
+    public UIToggle AddToggleElement(string? label = null)
     {
         var toggle = ComponentRegistry.CreateComponent(ComponentRegistry.ComponentType.Toggle);
-        return toggle.AddComponent<FarewellToggle>();
+        toggle.transform.SetParent(transform, false);
+        var text = toggle.transform.GetChild(0).GetChild(0).GetComponent<RTLTextMeshPro>();
+        if (label != null)
+        {
+            text.originalText = label;
+            text.text = label;
+            text.SetText(label);
+            text.fontSizeMin = text.fontSizeMax;
+        } else
+            DestroyImmediate(text.gameObject);
+        return toggle.transform.GetChild(0).GetChild(label == null ? 0 : 1).GetChild(0).GetComponent<UIToggle>();
     }
     
     /// <summary>

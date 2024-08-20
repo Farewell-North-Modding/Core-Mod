@@ -23,12 +23,12 @@ public class TitleScreenPatcher : MonoBehaviour
 
     private static void ReplaceArtwork()
     {
-        // TODO: Create Artwork and create Replacer
+        // TODO: Create Replacer
     }
 
     private void AddConnectUI()
     {
-        var uiBase = UniversalUI.RegisterUI("com.limo.UniteTheNorth", () => { });
-        var connectPanel = new ConnectPanel(uiBase);
+        //var uiBase = UniversalUI.RegisterUI("com.limo.UniteTheNorth", () => { });
+        //var connectPanel = new ConnectPanel(uiBase);
     }
 }
