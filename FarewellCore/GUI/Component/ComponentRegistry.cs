@@ -43,6 +43,7 @@ public static class ComponentRegistry
             Object.DontDestroyOnLoad(cacheCanvas);
             cacheCanvas.SetActive(false);
             var rootCanvas = scene.GetRootGameObjects().First();
+            var accessibility = rootCanvas.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0);
             // Create Canvas Cache
             var canvas = Object.Instantiate(rootCanvas);
             Object.DestroyImmediate(canvas.GetComponent<SettingsController>());
@@ -53,8 +54,11 @@ public static class ComponentRegistry
             Components[ComponentType.Canvas] = canvas;
             // Create Vertical Layout Cache
             var vLayout = Object.Instantiate(rootCanvas.transform.GetChild(0).GetChild(0).GetChild(0).gameObject, cacheCanvas.transform);
-            for(var i = 0; i < vLayout.transform.childCount; i++)
-                Object.DestroyImmediate(vLayout.transform.GetChild(i).gameObject);
+            for (var i = 0; i < vLayout.transform.childCount; i++)
+            {
+                vLayout.transform.GetChild(i).SetParent(null);
+                Object.Destroy(vLayout.transform.GetChild(i).gameObject);
+            }
             vLayout.transform.name = "FarewellVerticalLayout";
             Components[ComponentType.VerticalLayout] = vLayout;
             // Create Horizontal Layout Cache
@@ -63,8 +67,6 @@ public static class ComponentRegistry
             Object.DestroyImmediate(hLayout.transform.GetChild(0).gameObject);
             hLayout.transform.name = "FarewellHorizontalLayout";
             Components[ComponentType.HorizontalLayout] = hLayout;
-            // Try to get the "accessibility" game object for component harvesting
-            var accessibility = rootCanvas.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0);
             // Create Panel Cache
             var panel = Object.Instantiate(accessibility.gameObject, cacheCanvas.transform);
             panel.SetActive(true);
@@ -85,6 +87,7 @@ public static class ComponentRegistry
             var label = unusedBool.GetChild(0).GetChild(0);
             label.SetParent(cacheCanvas.transform);
             label.name = "FarewellLabel";
+            Object.DestroyImmediate(label.GetComponent<LocalizedTextMeshPro>());
             Object.DestroyImmediate(unusedBool.gameObject);
             Components[ComponentType.Label] = label.gameObject;
             // Create Enum Cache
@@ -96,10 +99,8 @@ public static class ComponentRegistry
             var header = panel.transform.GetChild(0);
             header.SetParent(cacheCanvas.transform);
             header.name = "FarewellHeader";
+            Object.DestroyImmediate(header.GetComponent<LocalizedTextMeshPro>());
             Components[ComponentType.Header] = header.gameObject;
-            // Remove all localization components
-            foreach (var text in panel.GetComponentsInChildren<LocalizedTextMeshPro>())
-                Object.DestroyImmediate(text);
             // Finish Up
             foreach (var action in AfterInit)
                 action();

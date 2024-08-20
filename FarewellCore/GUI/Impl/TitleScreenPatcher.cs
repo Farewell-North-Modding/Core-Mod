@@ -22,13 +22,16 @@ public class TitleScreenPatcher : MonoBehaviour
     {
         PatchVersionNumber();
         PatchMenuButton();
-        ComponentRegistry.Initialize();
-        ComponentRegistry.RunOnReady(() =>
+        FarewellUI.CreateFarewellUI(ui =>
         {
-            var ui = FarewellUI.CreateCanvas();
             var panel = ui.AddPanel();
             panel.AddHeader("This is a test UI!");
             panel.AddLabel("This is a test Label!");
+            var layout = panel.AddHorizontalLayout();
+            layout.AddLabel("This is a text in");
+            var vLayout = layout.AddVerticalLayout();
+            vLayout.AddLabel("a horizontal layout with a");
+            vLayout.AddLabel("vertical layout inside!");
         });
         FarewellCore.Logger.Msg("Applied Title Screen Patches");
     }
