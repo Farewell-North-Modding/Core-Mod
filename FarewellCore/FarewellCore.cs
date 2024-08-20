@@ -1,4 +1,5 @@
-﻿using FarewellCore.GUI.Impl;
+﻿using FarewellCore.GUI.Component;
+using FarewellCore.GUI.Impl;
 using MelonLoader;
 using FarewellCore.Input;
 
@@ -15,6 +16,7 @@ public class FarewellCore : FarewellMod
 
     public override void OnInitializeMelon()
     {
+        ComponentRegistry.Initialize();
     }
 
     public override void OnUpdate()
@@ -26,6 +28,7 @@ public class FarewellCore : FarewellMod
 
     public override void OnSceneWasLoaded(int buildIndex, string sceneName)
     {
+        ComponentRegistry.OnSceneLoad(sceneName);
         TitleScreenPatcher.Patch(sceneName);
     }
 }
