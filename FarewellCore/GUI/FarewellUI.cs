@@ -1,4 +1,6 @@
 ﻿using FarewellCore.GUI.Component;
+using UnityEngine;
+using UnityEngine.UI;
 
 namespace FarewellCore.GUI;
 
@@ -24,5 +26,24 @@ public static class FarewellUI
     {
         var go = ComponentRegistry.CreateComponent(ComponentRegistry.ComponentType.Canvas);
         return go.AddComponent<FarewellLayout>();
+    }
+
+    public static FarewellLayout CreatePanel(Transform parent, bool solid = false)
+    {
+        var panel = ComponentRegistry.CreateComponent(ComponentRegistry.ComponentType.Panel);
+        panel.transform.SetParent(parent, false);
+        var generic = panel.AddComponent<FarewellLayout>();
+        if (!solid)
+            return generic;
+        var img = panel.GetComponent<Image>();
+        img.color = Color.black;
+        return generic;
+    }
+    
+    public static FarewellLayout CreateHorizontalLayout(Transform parent)
+    {
+        var layout = ComponentRegistry.CreateComponent(ComponentRegistry.ComponentType.HorizontalLayout);
+        layout.transform.SetParent(parent, false);
+        return layout.AddComponent<FarewellLayout>();
     }
 }
