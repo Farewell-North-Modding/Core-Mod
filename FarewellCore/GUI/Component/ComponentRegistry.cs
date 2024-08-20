@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using Il2CppFarewellNorth.UI.Settings;
+using Il2CppKBCore.Localization;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 using Object = UnityEngine.Object;
 
@@ -10,14 +12,15 @@ namespace FarewellCore.GUI.Component;
 public static class ComponentRegistry
 {
     private static readonly Dictionary<ComponentType, GameObject> Components = new();
-    private static bool isInitializing;
+    private static readonly List<Action> AfterInit = new();
+    private static bool _isInitializing;
     
     /// <summary>
     /// Initializes the component registry
     /// </summary>
     public static void Initialize()
     {
-        isInitializing = true;
+        _isInitializing = true;
         Components.Clear();
         SceneManager.LoadScene("Settings", LoadSceneMode.Additive);
     }
@@ -28,9 +31,9 @@ public static class ComponentRegistry
     /// <param name="sceneName">The loaded scenes name</param>
     public static void OnSceneLoad(string sceneName)
     {
-        if(sceneName != "Settings" || !isInitializing)
+        if(sceneName != "Settings" || !_isInitializing)
             return;
-        isInitializing = false;
+        _isInitializing = false;
         try
         {
             // Retrieve scene and create cache canvas
@@ -39,9 +42,29 @@ public static class ComponentRegistry
             cacheCanvas.AddComponent<Canvas>();
             Object.DontDestroyOnLoad(cacheCanvas);
             cacheCanvas.SetActive(false);
-            // Try to get the "accessibility" game object for components
-            var accessibility = scene.GetRootGameObjects()[0].transform
-                .GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0);
+            var rootCanvas = scene.GetRootGameObjects().First();
+            // Create Canvas Cache
+            var canvas = Object.Instantiate(rootCanvas);
+            Object.DestroyImmediate(canvas.GetComponent<SettingsController>());
+            Object.DestroyImmediate(canvas.transform.GetChild(1).gameObject);
+            Object.DestroyImmediate(canvas.transform.GetChild(0).gameObject);
+            canvas.transform.name = "FarewellCanvas";
+            Object.DontDestroyOnLoad(canvas);
+            Components[ComponentType.Canvas] = canvas;
+            // Create Vertical Layout Cache
+            var vLayout = Object.Instantiate(rootCanvas.transform.GetChild(0).GetChild(0).GetChild(0).gameObject, cacheCanvas.transform);
+            for(var i = 0; i < vLayout.transform.childCount; i++)
+                Object.DestroyImmediate(vLayout.transform.GetChild(i).gameObject);
+            vLayout.transform.name = "FarewellVerticalLayout";
+            Components[ComponentType.VerticalLayout] = vLayout;
+            // Create Horizontal Layout Cache
+            var hLayout = Object.Instantiate(rootCanvas.transform.GetChild(0).gameObject, cacheCanvas.transform);
+            Object.DestroyImmediate(hLayout.transform.GetChild(1).gameObject);
+            Object.DestroyImmediate(hLayout.transform.GetChild(0).gameObject);
+            hLayout.transform.name = "FarewellHorizontalLayout";
+            Components[ComponentType.HorizontalLayout] = hLayout;
+            // Try to get the "accessibility" game object for component harvesting
+            var accessibility = rootCanvas.transform.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetChild(0);
             // Create Panel Cache
             var panel = Object.Instantiate(accessibility.gameObject, cacheCanvas.transform);
             panel.SetActive(true);
@@ -62,7 +85,7 @@ public static class ComponentRegistry
             var label = unusedBool.GetChild(0).GetChild(0);
             label.SetParent(cacheCanvas.transform);
             label.name = "FarewellLabel";
-            Object.Destroy(unusedBool.gameObject);
+            Object.DestroyImmediate(unusedBool.gameObject);
             Components[ComponentType.Label] = label.gameObject;
             // Create Enum Cache
             var enumSelect = panel.transform.GetChild(1);
@@ -74,7 +97,13 @@ public static class ComponentRegistry
             header.SetParent(cacheCanvas.transform);
             header.name = "FarewellHeader";
             Components[ComponentType.Header] = header.gameObject;
-            // Clean Up
+            // Remove all localization components
+            foreach (var text in panel.GetComponentsInChildren<LocalizedTextMeshPro>())
+                Object.DestroyImmediate(text);
+            // Finish Up
+            foreach (var action in AfterInit)
+                action();
+            AfterInit.Clear();
             SceneManager.UnloadSceneAsync(scene);
         }
         catch (Exception e)
@@ -90,12 +119,10 @@ public static class ComponentRegistry
     /// <returns>The created game object</returns>
     public static GameObject CreateComponent(ComponentType componentType)
     {
-        if (!Components.ContainsKey(componentType))
-        {
-            FarewellCore.Logger.Msg($"The registry is missing an entry for {componentType}!");
-            return new GameObject("Invalid");
-        }
-        return Object.Instantiate(Components[componentType]);
+        if (Components.TryGetValue(componentType, out var component))
+            return Object.Instantiate(component);
+        FarewellCore.Logger.Msg($"The registry is missing an entry for {componentType}!");
+        return new GameObject("InvalidRegistryItem");
     }
 
     /// <summary>
@@ -103,11 +130,26 @@ public static class ComponentRegistry
     /// </summary>
     public enum ComponentType
     {
+        Canvas,
         Panel,
+        VerticalLayout,
+        HorizontalLayout,
         Header,
         Label,
         Toggle,
         Enum,
         Slider
+    }
+
+    /// <summary>
+    /// Runs the passed action once the farewell ui lib is ready to be used. Only required on title screen scene load.
+    /// </summary>
+    /// <param name="action">The actual action to run</param>
+    public static void RunOnReady(Action action)
+    {
+        if (Components.Count > 0)
+            action();
+        else
+            AfterInit.Add(action);
     }
 }

@@ -1,4 +1,5 @@
-﻿using Il2CppKBCore.Localization;
+﻿using FarewellCore.GUI.Component;
+using Il2CppKBCore.Localization;
 using Il2CppRTLTMPro;
 using Il2CppTMPro;
 using MelonLoader;
@@ -21,6 +22,14 @@ public class TitleScreenPatcher : MonoBehaviour
     {
         PatchVersionNumber();
         PatchMenuButton();
+        ComponentRegistry.Initialize();
+        ComponentRegistry.RunOnReady(() =>
+        {
+            var ui = FarewellUI.CreateCanvas();
+            var panel = ui.AddPanel();
+            panel.AddHeader("This is a test UI!");
+            panel.AddLabel("This is a test Label!");
+        });
         FarewellCore.Logger.Msg("Applied Title Screen Patches");
     }
 

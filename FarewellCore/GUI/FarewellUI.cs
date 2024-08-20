@@ -1,28 +1,16 @@
-﻿using MelonLoader;
-using UnityEngine;
-using UnityEngine.UI;
+﻿using FarewellCore.GUI.Component;
 
 namespace FarewellCore.GUI;
 
-[RegisterTypeInIl2Cpp]
-public class FarewellUI : MonoBehaviour
+public static class FarewellUI
 {
-    private void Start()
+    /// <summary>
+    /// Creates a new canvas using the farewell mod ui lib
+    /// </summary>
+    /// <returns>The canvas to work with</returns>
+    public static FarewellGenericUI CreateCanvas()
     {
-        var canvasScaler = gameObject.AddComponent<CanvasScaler>();
-        canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-        canvasScaler.referenceResolution = new Vector2(1920, 1080);
-        gameObject.AddComponent<HorizontalLayoutGroup>();
-    }
-
-    public static FarewellUI Create(string name)
-    {
-        var go = new GameObject(name);
-        var ui = go.AddComponent<FarewellUI>();
-        var canvas = go.AddComponent<Canvas>();
-        canvas.sortingOrder = 20000;
-        canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-        go.AddComponent<GraphicRaycaster>();
-        return ui;
+        var go = ComponentRegistry.CreateComponent(ComponentRegistry.ComponentType.Canvas);
+        return go.AddComponent<FarewellGenericUI>();
     }
 }
