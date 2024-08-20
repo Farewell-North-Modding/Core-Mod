@@ -160,6 +160,23 @@ public class FarewellLayout : MonoBehaviour
         dropdown.SetValue(defaultIndex);
         return dropdown;
     }
+
+    public TMP_InputField AddInputField(string placeholder = "Enter Text...", string defaultValue = "", string? label = null)
+    {
+        var dropdown = AddDefaultElement<UIDropdown>(label, ComponentRegistry.ComponentType.Dropdown);
+        var field = dropdown.gameObject.AddComponent<TMP_InputField>();
+        DestroyImmediate(dropdown._dropdown);
+        DestroyImmediate(dropdown);
+        var text = dropdown.transform.GetChild(0).GetComponent<RTLTextMeshPro>();
+        var ph = Instantiate(text.gameObject, dropdown.transform).GetComponent<RTLTextMeshPro>();
+        ph.transform.name = "Placeholder";
+        ph.faceColor = new Color32(255, 255, 255, 160);
+        ph.text = placeholder;
+        field.placeholder = ph;
+        field.textComponent = text;
+        field.text = defaultValue;
+        return field;
+    }
     
     /// <summary>
     /// Adds a custom object to the elements children

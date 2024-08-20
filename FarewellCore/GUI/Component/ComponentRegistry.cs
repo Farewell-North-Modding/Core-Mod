@@ -102,6 +102,7 @@ public static class ComponentRegistry
             Object.DestroyImmediate(dropdown.GetComponent<SettingsLanguageValueUI>());
             Object.DestroyImmediate(dropdown.GetChild(0).GetChild(0).GetComponent<LocalizedTextMeshPro>());
             Object.DestroyImmediate(dropdown.GetChild(0).GetChild(1).GetChild(0).GetComponent<LocalizedDropdown>());
+            Object.DestroyImmediate(dropdown.GetChild(0).GetChild(1).GetChild(0).GetChild(0).GetComponent<LocalizedTextMeshPro>());
             Components[ComponentType.Dropdown] = dropdown.gameObject;
             // Create Header Cache
             var header = panel.transform.GetChild(0);
