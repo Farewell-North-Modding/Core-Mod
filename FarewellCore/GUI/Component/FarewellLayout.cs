@@ -1,5 +1,6 @@
 ﻿using Il2CppKBCore.UI;
 using Il2CppRTLTMPro;
+using Il2CppTMPro;
 using MelonLoader;
 using UnityEngine;
 using UnityEngine.UI;
@@ -91,13 +92,15 @@ public class FarewellLayout : MonoBehaviour
     }
 
     /// <summary>
-    /// Adds an on off toggle entry like in the settings
+    /// Internal method that adds a default element of no specific type to the layout
     /// </summary>
-    /// <param name="label">The text on the left of the toggle. Is removed when not given.</param>
-    /// <returns>Game-internal UIToggle element for further use</returns>
-    public UIToggle AddToggleElement(string? label = null)
+    /// <param name="label">The text on the left of the element. Is fully removed when not given.</param>
+    /// <param name="type">The component type to pull with from the registry</param>
+    /// <typeparam name="T">The type of the default element</typeparam>
+    /// <returns>The default element according to the type param</returns>
+    private T AddDefaultElement<T>(string? label, ComponentRegistry.ComponentType type)
     {
-        var toggle = ComponentRegistry.CreateComponent(ComponentRegistry.ComponentType.Toggle);
+        var toggle = ComponentRegistry.CreateComponent(type);
         toggle.transform.SetParent(transform, false);
         var text = toggle.transform.GetChild(0).GetChild(0).GetComponent<RTLTextMeshPro>();
         if (label != null)
@@ -108,7 +111,54 @@ public class FarewellLayout : MonoBehaviour
             text.fontSizeMin = text.fontSizeMax;
         } else
             DestroyImmediate(text.gameObject);
-        return toggle.transform.GetChild(0).GetChild(label == null ? 0 : 1).GetChild(0).GetComponent<UIToggle>();
+        return toggle.transform.GetChild(0).GetChild(label == null ? 0 : 1).GetChild(0).GetComponent<T>();
+    }
+
+    /// <summary>
+    /// Adds an on off toggle entry like in the settings
+    /// </summary>
+    /// <param name="label">The text on the left of the toggle. Is fully removed when not given.</param>
+    /// <returns>Game-internal UIToggle element for further use</returns>
+    public UIToggle AddToggle(string? label = null)
+    {
+        return AddDefaultElement<UIToggle>(label, ComponentRegistry.ComponentType.Toggle);
+    }
+
+    /// <summary>
+    /// Adds a slider entry like in the settings
+    /// </summary>
+    /// <param name="min">The minimum value of the slider</param>
+    /// <param name="max">The maximum value of the slider</param>
+    /// <param name="value">The initial value of the slider</param>
+    /// <param name="label">The text on the left of the slider. Is fully removed when not given.</param>
+    /// <returns>Game-internal UISlider element for further use</returns>
+    public UISlider AddSlider(float min = 0, float max = 1, float value = 0, string? label = null)
+    {
+        var slider = AddDefaultElement<UISlider>(label, ComponentRegistry.ComponentType.Slider);
+        slider.SetRange(min, max);
+        slider.SetValue(value);
+        return slider;
+    }
+
+    /// <summary>
+    /// Adds a dropdown entry like in the settings
+    /// </summary>
+    /// <param name="entries"></param>
+    /// <param name="defaultIndex"></param>
+    /// <param name="label">The text on the left of the slider. Is fully removed when not given.</param>
+    /// <returns>Game-internal UISlider element for further use</returns>
+    public UIDropdown AddDropdown(List<TMP_Dropdown.OptionData> entries, int defaultIndex = 0, string? label = null)
+    {
+        if (entries.Count == 0)
+        {
+            FarewellCore.Logger.Warning("Creating dropdown with empty entries!");
+        }
+        var dropdown = AddDefaultElement<UIDropdown>(label, ComponentRegistry.ComponentType.Dropdown);
+        dropdown._dropdown.options.Clear();
+        foreach (var option in entries)
+            dropdown._dropdown.options.Add(option);
+        dropdown.SetValue(defaultIndex);
+        return dropdown;
     }
     
     /// <summary>

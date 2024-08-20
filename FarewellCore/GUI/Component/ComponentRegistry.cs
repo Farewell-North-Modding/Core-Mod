@@ -77,6 +77,8 @@ public static class ComponentRegistry
             var slider = panel.transform.GetChild(4);
             slider.SetParent(cacheCanvas.transform);
             slider.name = "FarewellSlider";
+            Object.DestroyImmediate(slider.GetComponent<SettingsFloatValueUI>());
+            Object.DestroyImmediate(slider.GetChild(0).GetChild(0).GetComponent<LocalizedTextMeshPro>());
             Components[ComponentType.Slider] = slider.gameObject;
             // Create Toggle Cache
             var toggle = panel.transform.GetChild(3);
@@ -93,11 +95,14 @@ public static class ComponentRegistry
             Object.DestroyImmediate(label.GetComponent<LocalizedTextMeshPro>());
             Object.DestroyImmediate(unusedBool.gameObject);
             Components[ComponentType.Label] = label.gameObject;
-            // Create Enum Cache
-            var enumSelect = panel.transform.GetChild(1);
-            enumSelect.SetParent(cacheCanvas.transform);
-            enumSelect.name = "FarewellEnumSelect";
-            Components[ComponentType.Enum] = enumSelect.gameObject;
+            // Create Dropdown Cache
+            var dropdown = panel.transform.GetChild(1);
+            dropdown.SetParent(cacheCanvas.transform);
+            dropdown.name = "FarewellDropdown";
+            Object.DestroyImmediate(dropdown.GetComponent<SettingsLanguageValueUI>());
+            Object.DestroyImmediate(dropdown.GetChild(0).GetChild(0).GetComponent<LocalizedTextMeshPro>());
+            Object.DestroyImmediate(dropdown.GetChild(0).GetChild(1).GetChild(0).GetComponent<LocalizedDropdown>());
+            Components[ComponentType.Dropdown] = dropdown.gameObject;
             // Create Header Cache
             var header = panel.transform.GetChild(0);
             header.SetParent(cacheCanvas.transform);
@@ -141,7 +146,7 @@ public static class ComponentRegistry
         Header,
         Label,
         Toggle,
-        Enum,
+        Dropdown,
         Slider
     }
 

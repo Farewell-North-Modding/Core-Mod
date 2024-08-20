@@ -31,13 +31,29 @@ public class TitleScreenPatcher : MonoBehaviour
             var vLayout = layout.AddVerticalLayout();
             vLayout.AddLabel("a horizontal layout with a");
             vLayout.AddLabel("vertical layout inside!");
-            panel.AddLabel("This is a toggle without a label");
-            panel.AddToggleElement().SetValue(true);
-            var toggle = panel.AddToggleElement("This is a toggle with a label");
+            panel.AddLabel("This is a toggle without a label!");
+            panel.AddToggle().SetValue(true);
+            var toggle = panel.AddToggle("This is a toggle with a label!");
             toggle.SetValue(false);
             toggle.add_OnValueChanged(new Action<bool>(val =>
             {
                 FarewellCore.Logger.Msg($"Toggled: {val}");
+            }));
+            var slider = panel.AddSlider(label: "This is a slider!");
+            slider.add_OnValueChanged(new Action<float>(val =>
+            {
+                FarewellCore.Logger.Msg($"Slider: {val}");
+            }));
+            var dropdown = panel.AddDropdown(new List<TMP_Dropdown.OptionData>()
+            {
+                new ("Test 1"),
+                new ("Test 2"),
+                new ("Test 3"),
+                new ("Test 4")
+            }, 1, "This is a dropdown!");
+            dropdown.add_OnValueChanged(new Action<int>(val =>
+            {
+                FarewellCore.Logger.Msg($"Dropdown: {val}");
             }));
         });
         FarewellCore.Logger.Msg("Applied Title Screen Patches");
