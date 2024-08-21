@@ -1,10 +1,13 @@
 ﻿using FarewellCore.GUI;
+using Il2CppFarewellNorth.UI.Menu.Main;
 using Il2CppKBCore.Localization;
 using Il2CppKBCore.UI;
 using Il2CppRTLTMPro;
 using Il2CppTMPro;
 using MelonLoader;
 using MelonLoader.Utils;
+using UniteTheNorth.Networking;
+using UniteTheNorth.Systems;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -33,38 +36,88 @@ public class TitleScreenPatcher : MonoBehaviour
     {
         // Initialize Panel
         var canvas = GameObject.Find("Canvas");
+        var focus = canvas.GetComponent<UIFocus>();
         var container = canvas.transform.GetChild(0).gameObject;
         var panel = FarewellUI.CreatePanel(canvas.transform);
         panel.AddHeader(isHost ? "Host Server" : "Join Server");
         // Initialize Components
-        var username = panel.AddInputField("Enter Username", label: "Username", onValueChanged: val =>
+        var username = panel.AddInputField("Enter Username", LocalNetworkManager.Username, label: "Username", onValueChanged: val =>
         {
-            UniteTheNorth.Logger.Msg($"Username: {val}");
+            LocalNetworkManager.Username = val;
         });
-        var address = panel.AddInputField("Enter IP Address", label: "Server Address", onValueChanged: val =>
+        var address = panel.AddInputField("Enter IP Address", LocalNetworkManager.Address, label: "Server Address", onValueChanged: val =>
         {
-            UniteTheNorth.Logger.Msg($"Address: {val}");
+            LocalNetworkManager.Address = val;
         });
         address.transform.parent.parent.parent.gameObject.SetActive(!isHost);
-        var port = panel.AddInputField("4657", label: "Server Port", onValueChanged: val =>
+        var port = panel.AddInputField("4657", LocalNetworkManager.Port != "4657" ? LocalNetworkManager.Port : "", label: "Server Port", onValueChanged: val =>
         {
-            UniteTheNorth.Logger.Msg($"Port: {val}");
+            LocalNetworkManager.Port = val;
         });
-        var password = panel.AddInputField("No Password", label: "Server Password", onValueChanged: val =>
+        port.contentType = TMP_InputField.ContentType.IntegerNumber;
+        var password = panel.AddInputField("No Password", LocalNetworkManager.Password, label: "Server Password", onValueChanged: val =>
         {
-            UniteTheNorth.Logger.Msg($"Password: {val}");
+            LocalNetworkManager.Password = val;
         });
+        password.contentType = TMP_InputField.ContentType.Password;
         var bottomBar = panel.AddLayout(true);
-        var cancel = bottomBar.AddBoxButton("Cancel", () =>
+        bottomBar.AddBoxButton("Cancel", () =>
         {
             container.SetActive(true);
             Destroy(panel.gameObject);
         }, navigation: FarewellUI.CreateNavigationPath());
-        var start = bottomBar.AddBoxButton(isHost ? "Host" : "Connect", () => UniteTheNorth.Logger.Msg("Ohio"), navigation: FarewellUI.CreateNavigationPath());
+        bottomBar.AddBoxButton(isHost ? "Host" : "Join", () =>
+        {
+            // Check for invalid values
+            if (LocalNetworkManager.Username == "")
+            {
+                focus.SetSelection(username);
+                return;
+            }
+            if (LocalNetworkManager.Address == "" && !isHost)
+            {
+                focus.SetSelection(address);
+                return;
+            }
+            if (LocalNetworkManager.Port == "" || !int.TryParse(LocalNetworkManager.Port, out var portNumber) || portNumber < 0 || portNumber > 65535)
+            {
+                focus.SetSelection(port);
+                return;
+            }
+            if (!isHost)
+            {
+                TryConnect(canvas);
+                return;
+            }
+            container.SetActive(true);
+            Destroy(panel.gameObject);
+            canvas.transform.parent.GetComponent<MainMenuController>().ContinueGame();
+        });
         // Finish Up
-        canvas.GetComponent<UIFocus>().SetSelection(username);
+        focus.SetSelection(username);
         container.SetActive(false);
+        LocalNetworkManager.HostServer = isHost;
         panel.gameObject.transform.localPosition = new Vector3(0, 300, 0);
+    }
+
+    private static void TryConnect(GameObject canvas)
+    {
+        canvas.SetActive(false);
+        FarewellUI.CreateFarewellUI(ui =>
+        {
+            var panel = ui.AddPanel();
+            panel.transform.localPosition = new Vector3(0, 100, 0);
+            panel.AddHeader("Connecting").alignment = TextAlignmentOptions.Center;
+            var status = panel.AddLabel("Connection is being established...");
+            LocalNetworkManager.SupplyStatusLabel(status);
+            status.alignment = TextAlignmentOptions.Bottom;
+            var cancelButton = panel.AddBoxButton("Cancel", () =>
+            {
+                Client.Instance?.NetClient?.DisconnectAll();
+            });
+            ui.GetComponent<UIFocus>().SetSelection(cancelButton._button);
+            LocalNetworkManager.InitializeLocal();
+        });
     }
 
     private static void ReplaceArtwork()
