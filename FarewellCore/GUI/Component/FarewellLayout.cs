@@ -1,4 +1,5 @@
-﻿using Il2CppKBCore.UI;
+﻿using Il2CppKBCore.Localization;
+using Il2CppKBCore.UI;
 using Il2CppRTLTMPro;
 using Il2CppTMPro;
 using MelonLoader;
@@ -70,24 +71,23 @@ public class FarewellLayout : MonoBehaviour
     }
 
     /// <summary>
-    /// Adds a vertical layout group
-    /// </summary>
-    /// <returns>The FarewellLayout component of the new layout</returns>
-    public FarewellLayout AddVerticalLayout()
-    {
-        var layout = ComponentRegistry.CreateComponent(ComponentRegistry.ComponentType.VerticalLayout);
-        layout.transform.SetParent(transform, false);
-        return layout.AddComponent<FarewellLayout>();
-    }
-
-    /// <summary>
     /// Adds a horizontal layout group
     /// </summary>
     /// <returns>The FarewellLayout component of the new layout</returns>
-    public FarewellLayout AddHorizontalLayout()
+    public FarewellLayout AddLayout(bool horizontal = false)
     {
-        var layout = ComponentRegistry.CreateComponent(ComponentRegistry.ComponentType.HorizontalLayout);
+        var layout = new GameObject("FarewellHorizontalLayout");
         layout.transform.SetParent(transform, false);
+        HorizontalOrVerticalLayoutGroup group = horizontal ? layout.AddComponent<HorizontalLayoutGroup>() : layout.AddComponent<VerticalLayoutGroup>();
+        group.childAlignment = TextAnchor.UpperCenter;
+        group.childControlWidth = true;
+        group.childControlHeight = false;
+        group.childForceExpandWidth = true;
+        group.childForceExpandHeight = false;
+        group.spacing = 20;
+        var fit = layout.AddComponent<ContentSizeFitter>();
+        fit.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+        fit.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
         return layout.AddComponent<FarewellLayout>();
     }
 
@@ -118,10 +118,16 @@ public class FarewellLayout : MonoBehaviour
     /// Adds an on off toggle entry like in the settings
     /// </summary>
     /// <param name="label">The text on the left of the toggle. Is fully removed when not given.</param>
+    /// <param name="defaultValue">The initial value of the toggle button</param>
+    /// <param name="onValueChanged">Callback that is called once the value changes</param>
     /// <returns>Game-internal UIToggle element for further use</returns>
-    public UIToggle AddToggle(string? label = null)
+    public UIToggle AddToggle(string? label = null, bool defaultValue = false, Action<bool>? onValueChanged = null)
     {
-        return AddDefaultElement<UIToggle>(label, ComponentRegistry.ComponentType.Toggle);
+        var toggle = AddDefaultElement<UIToggle>(label, ComponentRegistry.ComponentType.Toggle);
+        toggle.SetValue(defaultValue);
+        if(onValueChanged != null)
+            toggle.OnValueChanged += onValueChanged;
+        return toggle;
     }
 
     /// <summary>
@@ -131,12 +137,15 @@ public class FarewellLayout : MonoBehaviour
     /// <param name="max">The maximum value of the slider</param>
     /// <param name="value">The initial value of the slider</param>
     /// <param name="label">The text on the left of the slider. Is fully removed when not given.</param>
+    /// <param name="onValueChanged">Callback that is called once the value changes</param>
     /// <returns>Game-internal UISlider element for further use</returns>
-    public UISlider AddSlider(float min = 0, float max = 1, float value = 0, string? label = null)
+    public UISlider AddSlider(float min = 0, float max = 1, float value = 0, string? label = null, Action<float>? onValueChanged = null)
     {
         var slider = AddDefaultElement<UISlider>(label, ComponentRegistry.ComponentType.Slider);
         slider.SetRange(min, max);
         slider.SetValue(value);
+        if(onValueChanged != null)
+            slider.OnValueChanged += onValueChanged;
         return slider;
     }
 
@@ -146,8 +155,9 @@ public class FarewellLayout : MonoBehaviour
     /// <param name="entries"></param>
     /// <param name="defaultIndex"></param>
     /// <param name="label">The text on the left of the slider. Is fully removed when not given.</param>
+    /// <param name="onValueChanged">Callback that is called once the value changes</param>
     /// <returns>Game-internal UISlider element for further use</returns>
-    public UIDropdown AddDropdown(List<TMP_Dropdown.OptionData> entries, int defaultIndex = 0, string? label = null)
+    public UIDropdown AddDropdown(List<TMP_Dropdown.OptionData> entries, int defaultIndex = 0, string? label = null, Action<int>? onValueChanged = null)
     {
         if (entries.Count == 0)
         {
@@ -158,6 +168,8 @@ public class FarewellLayout : MonoBehaviour
         foreach (var option in entries)
             dropdown._dropdown.options.Add(option);
         dropdown.SetValue(defaultIndex);
+        if(onValueChanged != null)
+            dropdown.OnValueChanged += onValueChanged;
         return dropdown;
     }
 
@@ -167,10 +179,12 @@ public class FarewellLayout : MonoBehaviour
     /// <param name="placeholder">The placeholder that is displayed when the text is empty</param>
     /// <param name="defaultValue">The default value that's in the input field on construction</param>
     /// <param name="label">The text on the left of the input field. Is fully removed when not given.</param>
+    /// <param name="onValueChanged">Callback that is called once the value changes</param>
     /// <returns>Text mesh pro input field for further use</returns>
-    public TMP_InputField AddInputField(string placeholder = "Enter Text...", string defaultValue = "", string? label = null)
+    public TMP_InputField AddInputField(string placeholder = "Enter Text...", string defaultValue = "", string? label = null, Action<string>? onValueChanged = null)
     {
         var dropdown = AddDefaultElement<UIDropdown>(label, ComponentRegistry.ComponentType.Dropdown);
+        //transform.parent.parent.parent.name = "FarewellInput";
         DestroyImmediate(dropdown._dropdown);
         var dropdownTransform = dropdown.transform;
         DestroyImmediate(dropdown);
@@ -181,7 +195,35 @@ public class FarewellLayout : MonoBehaviour
         ph.text = placeholder;
         var fi = dropdownTransform.gameObject.AddComponent<FarewellInput>();
         fi.defaultValue = defaultValue;
-        return dropdownTransform.gameObject.AddComponent<TMP_InputField>();
+        var tmp = dropdownTransform.gameObject.AddComponent<TMP_InputField>();
+        tmp.onValueChanged.AddListener(onValueChanged);
+        return tmp;
+    }
+
+    /// <summary>
+    /// Adds a button field based on the dropdown menus in the settings menu
+    /// </summary>
+    /// <param name="buttonText">The text that should be displayed on the button</param>
+    /// <param name="onClick">Callback that gets called on button click</param>
+    /// <returns>Game-internal UIButton element for further use</returns>
+    public UIButton AddBoxButton(string buttonText, Action? onClick = null)
+    {
+        var toggle = AddDefaultElement<UIToggle>(null, ComponentRegistry.ComponentType.Toggle);
+        //transform.parent.name = "FarewellButton";
+        var toggleTransform = toggle.transform;
+        DestroyImmediate(toggle);
+        var ub = toggleTransform.gameObject.AddComponent<UIButton>();
+        toggleTransform.gameObject.AddComponent<Image>();
+        DestroyImmediate(toggleTransform.GetChild(1).gameObject);
+        var btn = toggleTransform.GetComponent<Button>();
+        if(onClick != null)
+            btn.onClick.AddListener(onClick);
+        var txtComp = toggleTransform.GetChild(0).gameObject;
+        DestroyImmediate(txtComp.GetComponent<LocalizedTextMeshPro>());
+        var txt = txtComp.GetComponent<RTLTextMeshPro>();
+        txt.text = buttonText;
+        txt.faceColor = new Color32(10, 10, 10, 255);
+        return ub;
     }
     
     /// <summary>
