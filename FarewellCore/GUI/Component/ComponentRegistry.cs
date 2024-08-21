@@ -52,6 +52,7 @@ public static class ComponentRegistry
             Object.DestroyImmediate(canvas.transform.GetChild(0).gameObject);
             canvas.transform.name = "FarewellCanvas";
             Object.DontDestroyOnLoad(canvas);
+            canvas.SetActive(false);
             Components[ComponentType.Canvas] = canvas;
             // Create Vertical Layout Cache
             var vLayout = Object.Instantiate(rootCanvas.transform.GetChild(0).GetChild(0).GetChild(0).gameObject, cacheCanvas.transform);
