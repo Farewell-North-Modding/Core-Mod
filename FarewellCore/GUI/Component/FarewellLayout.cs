@@ -201,7 +201,7 @@ public class FarewellLayout : MonoBehaviour
     }
 
     /// <summary>
-    /// Adds a button field based on the dropdown menus in the settings menu
+    /// Adds a custom button based on the dropdown menus in the settings menu
     /// </summary>
     /// <param name="buttonText">The text that should be displayed on the button</param>
     /// <param name="onClick">Callback that gets called on button click</param>
@@ -209,7 +209,6 @@ public class FarewellLayout : MonoBehaviour
     public UIButton AddBoxButton(string buttonText, Action? onClick = null)
     {
         var toggle = AddDefaultElement<UIToggle>(null, ComponentRegistry.ComponentType.Toggle);
-        //transform.parent.name = "FarewellButton";
         var toggleTransform = toggle.transform;
         DestroyImmediate(toggle);
         var ub = toggleTransform.gameObject.AddComponent<UIButton>();
@@ -224,6 +223,27 @@ public class FarewellLayout : MonoBehaviour
         txt.text = buttonText;
         txt.faceColor = new Color32(10, 10, 10, 255);
         return ub;
+    }
+
+    /// <summary>
+    /// Adds a button based on the buttons in the settings menu
+    /// </summary>
+    /// <param name="buttonText">The text that should be displayed on the button</param>
+    /// <param name="onClick">Callback that gets called on button click</param>
+    /// <returns>Game-internal UIButton element for further use</returns>
+    public UIButton AddButton(string buttonText, Action? onClick = null)
+    {
+        var button = ComponentRegistry.CreateComponent(ComponentRegistry.ComponentType.Button);
+        button.transform.SetParent(transform);
+        var text = button.transform.GetChild(1).GetComponent<RTLTextMeshPro>();
+        text.originalText = buttonText;
+        text.text = buttonText;
+        text.SetText(buttonText);
+        text.fontSizeMin = text.fontSizeMax;
+        var uiButton = button.GetComponent<UIButton>();
+        if(onClick != null)
+            uiButton._button.onClick.AddListener(onClick);
+        return uiButton;
     }
     
     /// <summary>

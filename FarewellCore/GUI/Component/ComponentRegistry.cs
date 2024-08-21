@@ -3,6 +3,7 @@ using Il2CppKBCore.Localization;
 using Il2CppKBCore.Settings.UI.Elements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using Object = UnityEngine.Object;
 
 namespace FarewellCore.GUI.Component;
@@ -111,11 +112,18 @@ public static class ComponentRegistry
             header.name = "FarewellHeader";
             Object.DestroyImmediate(header.GetComponent<LocalizedTextMeshPro>());
             Components[ComponentType.Header] = header.gameObject;
+            // Create Button Cache
+            var button = Object.Instantiate(rootCanvas.transform.GetChild(0).GetChild(0).GetChild(0).GetChild(0).gameObject, cacheCanvas.transform);
+            button.transform.name = "FarewellButton";
+            Object.DestroyImmediate(button.transform.GetChild(1).GetComponent<LocalizedTextMeshPro>());
+            button.GetComponent<Button>().onClick = new Button.ButtonClickedEvent();
+            Components[ComponentType.Button] = button.gameObject;
             // Finish Up
             foreach (var action in AfterInit)
                 action();
             AfterInit.Clear();
             SceneManager.UnloadSceneAsync(scene);
+            FarewellCore.Logger.Msg("Successfully generated component registry!");
         }
         catch (Exception e)
         {
@@ -149,7 +157,8 @@ public static class ComponentRegistry
         Label,
         Toggle,
         Dropdown,
-        Slider
+        Slider,
+        Button
     }
 
     /// <summary>
