@@ -47,4 +47,17 @@ public static class FarewellUI
         layout.transform.SetParent(parent, false);
         return layout.AddComponent<FarewellLayout>();
     }
+
+    public static Navigation CreateNavigationPath(Navigation.Mode mode = Navigation.Mode.Automatic, Selectable? left = null, Selectable? right = null, Selectable? up = null, Selectable? down = null)
+    {
+        var nav = new Navigation
+        {
+            mode = mode,
+            selectOnLeft = left,
+            selectOnRight = right,
+            selectOnUp = up,
+            selectOnDown = down
+        };
+        return nav;
+    }
 }

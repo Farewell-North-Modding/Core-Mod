@@ -100,9 +100,9 @@ public class FarewellLayout : MonoBehaviour
     /// <returns>The default element according to the type param</returns>
     private T AddDefaultElement<T>(string? label, ComponentRegistry.ComponentType type)
     {
-        var toggle = ComponentRegistry.CreateComponent(type);
-        toggle.transform.SetParent(transform, false);
-        var text = toggle.transform.GetChild(0).GetChild(0).GetComponent<RTLTextMeshPro>();
+        var comp = ComponentRegistry.CreateComponent(type);
+        comp.transform.SetParent(transform, false);
+        var text = comp.transform.GetChild(0).GetChild(0).GetComponent<RTLTextMeshPro>();
         if (label != null)
         {
             text.originalText = label;
@@ -111,7 +111,7 @@ public class FarewellLayout : MonoBehaviour
             text.fontSizeMin = text.fontSizeMax;
         } else
             DestroyImmediate(text.gameObject);
-        return toggle.transform.GetChild(0).GetChild(label == null ? 0 : 1).GetChild(0).GetComponent<T>();
+        return comp.transform.GetChild(0).GetChild(label == null ? 0 : 1).GetChild(0).GetComponent<T>();
     }
 
     /// <summary>
@@ -120,13 +120,15 @@ public class FarewellLayout : MonoBehaviour
     /// <param name="label">The text on the left of the toggle. Is fully removed when not given.</param>
     /// <param name="defaultValue">The initial value of the toggle button</param>
     /// <param name="onValueChanged">Callback that is called once the value changes</param>
+    /// <param name="navigation">Optional way to define a custom navigation path => best used for very custom layouts</param>
     /// <returns>Game-internal UIToggle element for further use</returns>
-    public UIToggle AddToggle(string? label = null, bool defaultValue = false, Action<bool>? onValueChanged = null)
+    public UIToggle AddToggle(string? label = null, bool defaultValue = false, Action<bool>? onValueChanged = null, Navigation? navigation = null)
     {
         var toggle = AddDefaultElement<UIToggle>(label, ComponentRegistry.ComponentType.Toggle);
         toggle.SetValue(defaultValue);
         if(onValueChanged != null)
             toggle.OnValueChanged += onValueChanged;
+        toggle._button.navigation = navigation ?? FarewellUI.CreateNavigationPath();
         return toggle;
     }
 
@@ -138,14 +140,16 @@ public class FarewellLayout : MonoBehaviour
     /// <param name="value">The initial value of the slider</param>
     /// <param name="label">The text on the left of the slider. Is fully removed when not given.</param>
     /// <param name="onValueChanged">Callback that is called once the value changes</param>
+    /// <param name="navigation">Optional way to define a custom navigation path => best used for very custom layouts</param>
     /// <returns>Game-internal UISlider element for further use</returns>
-    public UISlider AddSlider(float min = 0, float max = 1, float value = 0, string? label = null, Action<float>? onValueChanged = null)
+    public UISlider AddSlider(float min = 0, float max = 1, float value = 0, string? label = null, Action<float>? onValueChanged = null, Navigation? navigation = null)
     {
         var slider = AddDefaultElement<UISlider>(label, ComponentRegistry.ComponentType.Slider);
         slider.SetRange(min, max);
         slider.SetValue(value);
         if(onValueChanged != null)
             slider.OnValueChanged += onValueChanged;
+        slider._slider.navigation = navigation ?? FarewellUI.CreateNavigationPath();
         return slider;
     }
 
@@ -156,8 +160,9 @@ public class FarewellLayout : MonoBehaviour
     /// <param name="defaultIndex"></param>
     /// <param name="label">The text on the left of the slider. Is fully removed when not given.</param>
     /// <param name="onValueChanged">Callback that is called once the value changes</param>
+    /// <param name="navigation">Optional way to define a custom navigation path => best used for very custom layouts</param>
     /// <returns>Game-internal UISlider element for further use</returns>
-    public UIDropdown AddDropdown(List<TMP_Dropdown.OptionData> entries, int defaultIndex = 0, string? label = null, Action<int>? onValueChanged = null)
+    public UIDropdown AddDropdown(List<TMP_Dropdown.OptionData> entries, int defaultIndex = 0, string? label = null, Action<int>? onValueChanged = null, Navigation? navigation = null)
     {
         if (entries.Count == 0)
         {
@@ -170,6 +175,7 @@ public class FarewellLayout : MonoBehaviour
         dropdown.SetValue(defaultIndex);
         if(onValueChanged != null)
             dropdown.OnValueChanged += onValueChanged;
+        dropdown._dropdown.navigation = navigation ?? FarewellUI.CreateNavigationPath();
         return dropdown;
     }
 
@@ -180,11 +186,11 @@ public class FarewellLayout : MonoBehaviour
     /// <param name="defaultValue">The default value that's in the input field on construction</param>
     /// <param name="label">The text on the left of the input field. Is fully removed when not given.</param>
     /// <param name="onValueChanged">Callback that is called once the value changes</param>
+    /// <param name="navigation">Optional way to define a custom navigation path => best used for very custom layouts</param>
     /// <returns>Text mesh pro input field for further use</returns>
-    public TMP_InputField AddInputField(string placeholder = "Enter Text...", string defaultValue = "", string? label = null, Action<string>? onValueChanged = null)
+    public TMP_InputField AddInputField(string placeholder = "Enter Text...", string defaultValue = "", string? label = null, Action<string>? onValueChanged = null, Navigation? navigation = null)
     {
         var dropdown = AddDefaultElement<UIDropdown>(label, ComponentRegistry.ComponentType.Dropdown);
-        //transform.parent.parent.parent.name = "FarewellInput";
         DestroyImmediate(dropdown._dropdown);
         var dropdownTransform = dropdown.transform;
         DestroyImmediate(dropdown);
@@ -197,6 +203,7 @@ public class FarewellLayout : MonoBehaviour
         fi.defaultValue = defaultValue;
         var tmp = dropdownTransform.gameObject.AddComponent<TMP_InputField>();
         tmp.onValueChanged.AddListener(onValueChanged);
+        tmp.navigation = navigation ?? FarewellUI.CreateNavigationPath();
         return tmp;
     }
 
@@ -205,8 +212,9 @@ public class FarewellLayout : MonoBehaviour
     /// </summary>
     /// <param name="buttonText">The text that should be displayed on the button</param>
     /// <param name="onClick">Callback that gets called on button click</param>
+    /// <param name="navigation">Optional way to define a custom navigation path => best used for very custom layouts</param>
     /// <returns>Game-internal UIButton element for further use</returns>
-    public UIButton AddBoxButton(string buttonText, Action? onClick = null)
+    public UIButton AddBoxButton(string buttonText, Action? onClick = null, Navigation? navigation = null)
     {
         var toggle = AddDefaultElement<UIToggle>(null, ComponentRegistry.ComponentType.Toggle);
         var toggleTransform = toggle.transform;
@@ -215,6 +223,7 @@ public class FarewellLayout : MonoBehaviour
         toggleTransform.gameObject.AddComponent<Image>();
         DestroyImmediate(toggleTransform.GetChild(1).gameObject);
         var btn = toggleTransform.GetComponent<Button>();
+        ub._button = btn;
         if(onClick != null)
             btn.onClick.AddListener(onClick);
         var txtComp = toggleTransform.GetChild(0).gameObject;
@@ -222,6 +231,7 @@ public class FarewellLayout : MonoBehaviour
         var txt = txtComp.GetComponent<RTLTextMeshPro>();
         txt.text = buttonText;
         txt.faceColor = new Color32(10, 10, 10, 255);
+        btn.navigation = navigation ?? FarewellUI.CreateNavigationPath();
         return ub;
     }
 
@@ -230,8 +240,9 @@ public class FarewellLayout : MonoBehaviour
     /// </summary>
     /// <param name="buttonText">The text that should be displayed on the button</param>
     /// <param name="onClick">Callback that gets called on button click</param>
+    /// <param name="navigation">Optional way to define a custom navigation path => best used for very custom layouts</param>
     /// <returns>Game-internal UIButton element for further use</returns>
-    public UIButton AddButton(string buttonText, Action? onClick = null)
+    public UIButton AddButton(string buttonText, Action? onClick = null, Navigation? navigation = null)
     {
         var button = ComponentRegistry.CreateComponent(ComponentRegistry.ComponentType.Button);
         button.transform.SetParent(transform);
@@ -243,6 +254,7 @@ public class FarewellLayout : MonoBehaviour
         var uiButton = button.GetComponent<UIButton>();
         if(onClick != null)
             uiButton._button.onClick.AddListener(onClick);
+        uiButton._button.navigation = navigation ?? FarewellUI.CreateNavigationPath();
         return uiButton;
     }
     
