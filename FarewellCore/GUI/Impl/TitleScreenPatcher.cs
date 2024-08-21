@@ -1,4 +1,5 @@
-﻿using Il2CppKBCore.Localization;
+﻿using FarewellCore.GUI.Component;
+using Il2CppKBCore.Localization;
 using Il2CppRTLTMPro;
 using Il2CppTMPro;
 using MelonLoader;
@@ -21,9 +22,14 @@ public class TitleScreenPatcher : MonoBehaviour
     {
         PatchVersionNumber();
         PatchMenuButton();
-        FarewellUI.CreateFarewellUI(ui =>
+        /* UI Test
+        ComponentRegistry.RunOnReady(() =>
         {
-            var panel = ui.AddPanel();
+            var baseComp = GameObject.Find("Container").transform;
+            var baseLayout = FarewellUI.CreateHorizontalLayout(baseComp);
+            baseComp.GetChild(0).transform.SetParent(baseLayout.transform, false);
+            baseLayout.transform.SetSiblingIndex(0);
+            var panel = FarewellUI.CreatePanel(baseLayout.transform);
             panel.AddHeader("This is a test UI!");
             panel.AddLabel("This is a test Label!");
             var layout = panel.AddHorizontalLayout();
@@ -55,7 +61,7 @@ public class TitleScreenPatcher : MonoBehaviour
             {
                 FarewellCore.Logger.Msg($"Dropdown: {val}");
             }));
-        });
+        });*/
         FarewellCore.Logger.Msg("Applied Title Screen Patches");
     }
 

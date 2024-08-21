@@ -25,6 +25,7 @@ public static class FarewellUI
     public static FarewellLayout CreateCanvas()
     {
         var go = ComponentRegistry.CreateComponent(ComponentRegistry.ComponentType.Canvas);
+        go.SetActive(true);
         return go.AddComponent<FarewellLayout>();
     }
 
