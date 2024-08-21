@@ -161,21 +161,27 @@ public class FarewellLayout : MonoBehaviour
         return dropdown;
     }
 
+    /// <summary>
+    /// Adds an input field based on the dropdown menus in the settings menu
+    /// </summary>
+    /// <param name="placeholder">The placeholder that is displayed when the text is empty</param>
+    /// <param name="defaultValue">The default value that's in the input field on construction</param>
+    /// <param name="label">The text on the left of the input field. Is fully removed when not given.</param>
+    /// <returns>Text mesh pro input field for further use</returns>
     public TMP_InputField AddInputField(string placeholder = "Enter Text...", string defaultValue = "", string? label = null)
     {
         var dropdown = AddDefaultElement<UIDropdown>(label, ComponentRegistry.ComponentType.Dropdown);
-        var field = dropdown.gameObject.AddComponent<TMP_InputField>();
         DestroyImmediate(dropdown._dropdown);
+        var dropdownTransform = dropdown.transform;
         DestroyImmediate(dropdown);
-        var text = dropdown.transform.GetChild(0).GetComponent<RTLTextMeshPro>();
-        var ph = Instantiate(text.gameObject, dropdown.transform).GetComponent<RTLTextMeshPro>();
+        var text = dropdownTransform.GetChild(0).GetComponent<RTLTextMeshPro>();
+        var ph = Instantiate(text.gameObject, dropdownTransform).GetComponent<RTLTextMeshPro>();
         ph.transform.name = "Placeholder";
         ph.faceColor = new Color32(255, 255, 255, 160);
         ph.text = placeholder;
-        field.placeholder = ph;
-        field.textComponent = text;
-        field.text = defaultValue;
-        return field;
+        var fi = dropdownTransform.gameObject.AddComponent<FarewellInput>();
+        fi.defaultValue = defaultValue;
+        return dropdownTransform.gameObject.AddComponent<TMP_InputField>();
     }
     
     /// <summary>
