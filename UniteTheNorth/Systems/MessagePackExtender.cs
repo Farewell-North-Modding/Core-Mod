@@ -4,8 +4,10 @@ using Il2CppFarewellNorth.Environment.Herds;
 using Il2CppFarewellNorth.Environment.HiddenObjects;
 using Il2CppFarewellNorth.Environment.Lighting;
 using Il2CppFarewellNorth.Environment.MaskedObjects;
+using Il2CppFarewellNorth.Levels;
 using Il2CppFarewellNorth.Levels.Collectables;
 using Il2CppFarewellNorth.Levels.Lanterns;
+using Il2CppFarewellNorth.Managers;
 using Il2CppFarewellNorth.Managers.Impl;
 using Il2CppFarewellNorth.Misc;
 using Il2CppFarewellNorth.Vehicles.Dock;
@@ -16,6 +18,7 @@ using Il2CppKBCore.NPC.Waypoints;
 using Il2CppKBCore.Persistence;
 using Il2CppKBCore.Persistence.Persistables;
 using Il2CppKBCore.Platform.Achievements;
+using Il2CppKBCore.Zones;
 using MessagePack;
 using MessagePack.Formatters;
 using MessagePack.Resolvers;
@@ -254,13 +257,23 @@ public class DataStoreFormatter : IMessagePackFormatter<IDataStore>
     public IDataStore Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
         var manager = Object.FindObjectOfType<PersistenceManager>();
+        var meta = new SaveMetadata
+        {
+            EpochSaveTime = reader.ReadInt32(),
+            Progress = reader.ReadSingle(),
+            ZoneID = reader.ReadInt32()
+        };
+        UniteTheNorth.Logger.Msg($"Save meta: {meta.EpochSaveTime}, {meta.Progress}, {meta.ZoneID}");
         var store = new DataStore(manager.SettingsDataStore.Cast<DataStore>()._driver, false)
         {
-            Metadata =
+            Metadata = {
+                EpochSaveTime = meta.EpochSaveTime,
+                Progress = meta.Progress,
+                ZoneID = meta.ZoneID,
+            },
+            _save =
             {
-                EpochSaveTime = reader.ReadInt32(),
-                Progress = reader.ReadSingle(),
-                ZoneID = reader.ReadInt32()
+                Metadata = meta
             }
         };
         var entries = reader.ReadArrayHeader();
