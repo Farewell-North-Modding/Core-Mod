@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using Il2CppFarewellNorth.Managers.Impl;
 using LiteNetLib;
 using MelonLoader;
 using MessagePack;
@@ -123,8 +124,15 @@ public class Server : MonoBehaviour, INetEventListener
         while (_clients.ContainsKey(id))
             id++;
         var newClient = _clients[id] = new Client(request.Accept(), packet.Username, id);
-        // Send current Data
-        PacketManager.Send(newClient, new UserDataPacket(id), DeliveryMethod.ReliableOrdered, Channels.System);
+        // Send current Save Data
+        var manager = FindObjectOfType<PersistenceManager>();
+        PacketManager.Send(newClient, new PlayDataPacket(
+            id,
+            manager.CollectablesDataStore,
+            manager.GameSaveDataStore,
+            manager.AchievementsDataStore
+        ), DeliveryMethod.ReliableOrdered, Channels.System);
+        // Send player data
         foreach (var client in _clients.Values.Where(client => client != newClient))
         {
             PacketManager.Send(client, new RegisterPlayerPacket(

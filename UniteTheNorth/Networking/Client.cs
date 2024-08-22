@@ -55,6 +55,7 @@ public class Client : MonoBehaviour, INetEventListener
     public void OnPeerConnected(NetPeer peer)
     {
         UniteTheNorth.Logger.Msg($"[Client] Connected to {peer.Address}");
+        LocalNetworkManager.UpdateStatus("Loading save data...");
     }
 
     public void OnPeerDisconnected(NetPeer peer, DisconnectInfo disconnectInfo)

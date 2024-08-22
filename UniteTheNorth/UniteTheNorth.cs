@@ -11,6 +11,7 @@ public class UniteTheNorth : FarewellMod
 {
     public static string Version => BuildInfo.Version;
     public static MelonLogger.Instance Logger => Melon<UniteTheNorth>.Logger;
+    public static readonly List<Action> OnGameSceneLoaded = new();
 
     public override void OnInitializeMelon()
     {
@@ -21,8 +22,12 @@ public class UniteTheNorth : FarewellMod
     {
         TitleScreenPatcher.Patch(sceneName);
         LocalNetworkManager.OnSceneLoad(sceneName);
+        if(sceneName == "Main Menu")
+            OnGameSceneLoaded.Clear();
         if (sceneName != "Archipelago") return;
         PlayerManager.MainSceneLoaded();
+        OnGameSceneLoaded.ForEach(action => action());
+        OnGameSceneLoaded.Clear();
     }
 
     public override void OnFixedUpdate()

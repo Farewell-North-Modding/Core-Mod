@@ -18,7 +18,7 @@ public static class PacketManager
         // System Packets
         { typeof(KeepAlivePacket), 0 },
         { typeof(ChatMessagePacket), 1 },
-        { typeof(UserDataPacket), 2 },
+        { typeof(PlayDataPacket), 2 },
         // Important Packets
         { typeof(RegisterPlayerPacket), 10 },
         { typeof(UnregisterPlayerPacket), 11 },
