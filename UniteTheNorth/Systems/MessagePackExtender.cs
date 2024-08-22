@@ -65,6 +65,9 @@ public class DataStoreFormatter : IMessagePackFormatter<IDataStore>
     public void Serialize(ref MessagePackWriter writer, IDataStore value, MessagePackSerializerOptions options)
     {
         var trueVal = value.Cast<DataStore>();
+        writer.WriteInt32(trueVal.Metadata.EpochSaveTime);
+        writer.Write(trueVal.Metadata.Progress);
+        writer.WriteInt32(trueVal.Metadata.ZoneID);
         writer.WriteArrayHeader(trueVal.KeyCount);
         foreach (var entry in trueVal._gameData)
         {
@@ -251,7 +254,15 @@ public class DataStoreFormatter : IMessagePackFormatter<IDataStore>
     public IDataStore Deserialize(ref MessagePackReader reader, MessagePackSerializerOptions options)
     {
         var manager = Object.FindObjectOfType<PersistenceManager>();
-        var store = new DataStore(manager.SettingsDataStore.Cast<DataStore>()._driver, false);
+        var store = new DataStore(manager.SettingsDataStore.Cast<DataStore>()._driver, false)
+        {
+            Metadata =
+            {
+                EpochSaveTime = reader.ReadInt32(),
+                Progress = reader.ReadSingle(),
+                ZoneID = reader.ReadInt32()
+            }
+        };
         var entries = reader.ReadArrayHeader();
         store._gameData.Clear();
         for (var i = 0; i < entries; i++)
