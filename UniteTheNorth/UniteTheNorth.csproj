@@ -2,7 +2,15 @@
 	<PropertyGroup>
 		<!-- Install location - can be defined as a user variable `FarewellNorthLocation` to avoid editing this file when collaborating. -->
 		<FarewellNorthLocation Condition="!Exists('$(FarewellNorthLocation)/GameAssembly.dll')">..\..\..\..\..\SteamLibrary\steamapps\common\Farewell North</FarewellNorthLocation>
+		
+		<!-- Optional secondary install location - can be defined as a user variable `FarewellNorthSecondaryLocation` -->
+		<FarewellNorthSecondaryLocation Condition="'$(FarewellNorthSecondaryLocation)' != ''">$(FarewellNorthSecondaryLocation)</FarewellNorthSecondaryLocation>
+		
+		<!-- Flag to determine if secondary location is valid -->
+		<HasSecondaryLocation>false</HasSecondaryLocation>
+		<HasSecondaryLocation Condition="'$(FarewellNorthSecondaryLocation)' != '' AND Exists('$(FarewellNorthSecondaryLocation)/GameAssembly.dll')">true</HasSecondaryLocation>
 	</PropertyGroup>
+	
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -17,23 +25,36 @@
 		<GenerateAssemblyTrademarkAttribute>false</GenerateAssemblyTrademarkAttribute>
 		<GenerateAssemblyCultureAttribute>false</GenerateAssemblyCultureAttribute>
 	</PropertyGroup>
+	
 	<ItemGroup>
 		<Reference Include="$(FarewellNorthLocation)\MelonLoader\net6\*.dll" Exclude="$(FarewellNorthLocation)\MelonLoader\net6\System.Text.Json.dll" />
 		<Reference Include="$(FarewellNorthLocation)\MelonLoader\Il2CppAssemblies\*.dll" />
 	</ItemGroup>
+	
     <ItemGroup>
         <PackageReference Include="MessagePackAnalyzer" Version="3.0.134-beta">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
     </ItemGroup>
+	
 	<ItemGroup Label="Cross-Mod Dependencies">
 		<Reference Include="$(FarewellNorthLocation)\Mods\FarewellCore.dll" />
 	</ItemGroup>
+	
 	<ItemGroup Label="User Libs">
 		<Reference Include="$(FarewellNorthLocation)\UserLibs\*.dll" />
 	</ItemGroup>
-	<Target Name="CopyMod" AfterTargets="PostBuildEvent">
+
+	<!-- Copy to primary location always -->
+	<Target Name="CopyModToPrimary" AfterTargets="PostBuildEvent">
 		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(FarewellNorthLocation)\Mods\" />
+		<Message Text="Mod copied to primary location: $(FarewellNorthLocation)\Mods\" Importance="high" />
+	</Target>
+
+	<!-- Copy to secondary location if it exists -->
+	<Target Name="CopyModToSecondary" AfterTargets="CopyModToPrimary" Condition="'$(HasSecondaryLocation)' == 'true'">
+		<Copy SourceFiles="$(TargetPath)" DestinationFolder="$(FarewellNorthSecondaryLocation)\Mods\" />
+		<Message Text="Mod copied to secondary location: $(FarewellNorthSecondaryLocation)\Mods\" Importance="high" />
 	</Target>
 </Project>
