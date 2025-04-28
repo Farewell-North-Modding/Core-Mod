@@ -27,6 +27,8 @@ using Exception = System.Exception;
 using Object = UnityEngine.Object;
 using String = Il2CppSystem.String;
 
+#pragma warning disable CS0162 // Unreachable code detected
+
 namespace UniteTheNorth.Systems;
 
 public static class MessagePackExtender
